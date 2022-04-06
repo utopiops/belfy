@@ -1,0 +1,22 @@
+version: '3'
+services:
+  identity-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: identity-manager
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    command: npm run dev
+    networks:
+      - default
+    ports:
+      - '3000:3000'
+
+networks:
+  default:
+    external:
+      name: dev
+volumes:
+  node_modules:
