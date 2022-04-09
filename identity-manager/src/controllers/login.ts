@@ -1,9 +1,15 @@
 import { Request, Response } from 'express';
 import * as yup from 'yup';
-import data from '../users.json';
+import data from '../secrets.json';
 import handleRequest from './handler';
 import constants from '../utils/constants';
 import { generateIdToken, generateAccessToken } from '../services/auth';
+
+interface USER {
+  username: string;
+  password: string;
+  id?: string;
+}
 
 async function login(req: Request, res: Response) {
   const validationSchema = yup.object().shape({
@@ -14,9 +20,9 @@ async function login(req: Request, res: Response) {
   const handle = async (): Promise<{ outputs?: any; error?: { message: string; statusCode?: number } }> => {
     try {
       const { username, password } = req.body;
-      const found = data.users.find(
+      const found : USER = data.users.find(
         (user: { username: string; password: string }) => user.username === username && user.password === password,
-      );
+      )!;
 
       if (!found) {
         return {
@@ -26,6 +32,9 @@ async function login(req: Request, res: Response) {
           },
         };
       }
+
+      const userId = `00000000000000000000000${data.users.indexOf(found)}`;
+      found.id = userId;
 
       const idToken = await generateIdToken(found);
       const accessToken = await generateAccessToken(found);
