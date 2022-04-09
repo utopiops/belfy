@@ -1,0 +1,34 @@
+version: '3'
+services:
+  pgdb:
+    image: postgres
+    hostname: pgdb
+    env_file:
+      - postgres.env
+    volumes:
+      - 'pg_data:/var/lib/postgresql/data/'
+    ports:
+      - '5432:5432'
+    restart: unless-stopped
+  logstream-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    hostname: logstream-manager
+    volumes:
+      - .:/go/src/gitlab.com/utopiops-water/logstream-manager
+    command: go run main.go
+    networks:
+        - default
+    ports:
+      - '3003:3003'
+    depends_on:
+      - pgdb
+
+volumes:
+  pg_data:
+
+networks:
+  default:
+    external:
+      name: dev
