@@ -13,6 +13,7 @@ export async function generateIdToken(user: any, internal: boolean = false) {
   const opt = { compact: true, jwk: key, fields: { typ: 'jwt' }, alg: 'RS256' };
   const payload = JSON.stringify({
     account_id: constants.localAccountId,
+    user_id: user.id,
     sub: user.username,
     ...(!internal ? { ext: { external: true } } : {}),
     exp: Math.floor(Date.now() / 1000 + 3600 * 12), // 12 hours
@@ -24,22 +25,32 @@ export async function generateIdToken(user: any, internal: boolean = false) {
   return token;
 }
 
-export async function generateAccessToken(user: any, isInternal: boolean = false) {
+export async function generateAccessToken(user: any) {
   const secret = process.env.HMAC_SECRET_KEY ?? 'secret';
 
   const payload = {
     username: user.username,
-    ...(!isInternal
-      ? {
-          ext: {
-            external: true,
-          },
-        }
-      : {}),
+    ext: {
+      external: true,
+    },
   };
   const token = jwt.sign(payload, secret, {
     algorithm: 'HS256',
     expiresIn: '12h',
+  });
+  return token;
+}
+
+export async function generateInternalToken(client: any) {
+  const secret = process.env.HMAC_SECRET_KEY ?? 'secret';
+
+  const payload = {
+    client_id: client.id,
+    sub: client.id,
+  };
+  const token = jwt.sign(payload, secret, {
+    algorithm: 'HS256',
+    expiresIn: '6h',
   });
   return token;
 }
