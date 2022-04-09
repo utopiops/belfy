@@ -5,9 +5,10 @@
             "name": "read_github",
             "resource": "github/*",
             "actions": [
-                [
-                    "get"
-                ]
+                "get",
+                "post",
+                "put",
+                "delete"
             ],
             "effect": "allow"
         },
@@ -15,9 +16,29 @@
             "name": "read_gitlab",
             "resource": "gitlab/*",
             "actions": [
-                [
-                    "get"
-                ]
+                "get",
+                "post",
+                "put",
+                "delete"
+            ],
+            "effect": "allow"
+        },
+        {
+            "name": "read_bitbucket",
+            "resource": "bitbucket/*",
+            "actions": [
+                "get",
+                "post",
+                "put",
+                "delete"
+            ],
+            "effect": "allow"
+        },
+        {
+            "name": "read_service_name",
+            "resource": "settings/*",
+            "actions": [
+                "get"
             ],
             "effect": "allow"
         }

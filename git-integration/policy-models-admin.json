@@ -5,9 +5,7 @@
             "name": "github_admin",
             "resource": "github/*",
             "actions": [
-                [
-                    ".*"
-                ]
+                ".*"
             ],
             "effect": "allow"
         },
@@ -15,9 +13,23 @@
             "name": "gitlab_admin",
             "resource": "gitlab/*",
             "actions": [
-                [
-                    ".*"
-                ]
+                ".*"
+            ],
+            "effect": "allow"
+        },
+        {
+            "name": "bitbucket_admin",
+            "resource": "bitbucket/*",
+            "actions": [
+                ".*"
+            ],
+            "effect": "allow"
+        },
+        {
+            "name": "settings_admin",
+            "resource": "settings/*",
+            "actions": [
+                ".*"
             ],
             "effect": "allow"
         }

@@ -2,13 +2,15 @@ package stores
 
 import (
 	"context"
+	"time"
 
+	"github.com/go-redis/redis"
 	"gitlab.com/utopiops-water/git-integration/db"
 	"gitlab.com/utopiops-water/git-integration/models"
 )
 
-func NewSettingsStore(db *db.DB) SettingsStore {
-	return &settingsStore{db}
+func NewSettingsStore(db *db.DB, redisClient *redis.Client) SettingsStore {
+	return &settingsStore{db, redisClient}
 }
 
 type SettingsStore interface {
@@ -36,8 +38,13 @@ type SettingsStore interface {
 
 	// IsCreated checks that a table is really created or not
 	IsCreated(table string) (created bool, err error)
+
+	// GetRedisPairValue checks that a value exist for key and if exist returnes value of it
+	GetRedisPairValue(key string) (exist bool, value string, err error)
+	SetRedisPair(key, value string, ttl time.Duration) (err error)
 }
 
 type settingsStore struct {
-	db *db.DB
+	db          *db.DB
+	redisClient *redis.Client
 }

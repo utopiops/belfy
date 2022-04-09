@@ -12,34 +12,26 @@ import (
 )
 
 const (
-	MaxProjectLength int = 150
+	MaxBranchLength int = 150
 )
 
-type project struct {
-	NameWithNameSpace string `json:"name_with_namespace"`
-	ID                int    `json:"id"`
-	RepositoryUrl     string `json:"http_url_to_repo"`
+type branch struct {
+	Name    string `json:"name"`
+	Default bool   `json:"default"`
+	Url     string `json:"web_url"`
 }
 
-type queryString struct {
-	IntegrationName string `form:"integration_name"`
-	Url             string `form:"url"`
-	AccessToken     string `form:"access_token"`
-}
-
-type IntermediaryError struct {
-}
-
-// @Description get list of all user's projects
-// @Param integration_name query string true "name of user integration in our system"
-// @Success 200 {array} project	"ok"
-// @Router /gitlab/project [get]
-func (controller *GitlabController) ListProjects(httpHelper shared.HttpHelper, settingsStore stores.SettingsStore) gin.HandlerFunc {
+func (controller *GitlabController) ListBranches(httpHelper shared.HttpHelper, settingsStore stores.SettingsStore) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		authHeader := c.Request.Header.Get("Authorization")
 
-		var qs queryString
+		var qs struct {
+			IntegrationName string `form:"integration_name"`
+			Url             string `form:"url"`
+			AccessToken     string `form:"access_token"`
+			ID              int    `form:"id"`
+		}
 		if c.ShouldBindQuery(&qs) != nil {
 			c.Status(http.StatusBadRequest)
 			return
@@ -67,26 +59,27 @@ func (controller *GitlabController) ListProjects(httpHelper shared.HttpHelper, s
 				AccessToken: qs.AccessToken,
 			}
 		}
-		// Get the list of projects from Gitlab
+		// Get the list of branches from Gitlab
 
-		// We limit the number of the projects to avoid potential misuse (no idea atm how it could be just don't wanna keep it unlimited), and perhaps allow different tierings in the future
-		projects := make([]project, 0, MaxProjectLength)
-		// SEE: https://docs.gitlab.com/ee/api/projects.html#list-all-projects
+		branches := make([]branch, 0, MaxBranchLength)
+		// SEE: https://docs.gitlab.com/ee/api/branches.html#list-repository-branches
 		itemsPerPage := 100
-		projectsUrl := fmt.Sprintf("%s/api/v4/projects?owned=true&simple=true&per_page=%d", integration.Url, itemsPerPage)
+		branchesUrl := fmt.Sprintf("%s/api/v4/projects/%d/repository/branches?per_page=%d", integration.Url, qs.ID, itemsPerPage)
 		for {
-			projectsHeaders := []shared.Header{
+			branchesHeaders := []shared.Header{
 				{
 					Key:   "Authorization",
 					Value: fmt.Sprintf("Bearer %s", integration.AccessToken),
 				},
 			}
-			out, err, statusCode, header := httpHelper.HttpRequest(http.MethodGet, projectsUrl, nil, projectsHeaders, 0)
+			out, err, statusCode, header := httpHelper.HttpRequest(http.MethodGet, branchesUrl, nil, branchesHeaders, 0)
+			fmt.Println("url:", branchesUrl)
+			fmt.Println("statusCode here", statusCode)
 			if err != nil || statusCode != http.StatusOK {
 				c.Status(http.StatusBadRequest)
 				return
 			}
-			var newBatch []project
+			var newBatch []branch
 			err = json.Unmarshal(out, &newBatch)
 			if err != nil {
 				fmt.Println(err.Error())
@@ -94,9 +87,9 @@ func (controller *GitlabController) ListProjects(httpHelper shared.HttpHelper, s
 				return
 			}
 
-			limit := MaxProjectLength - len(projects)
-			projects = append(projects, newBatch[:MinInt(limit, len(newBatch))]...)
-			limit = MaxProjectLength - len(projects)
+			limit := MaxBranchLength - len(branches)
+			branches = append(branches, newBatch[:MinInt(limit, len(newBatch))]...)
+			limit = MaxBranchLength - len(branches)
 			if limit == 0 || len(newBatch) < itemsPerPage { // If you've reached the limit or the items returned is less than what it could be (a sign it's finished) stop iterating
 				break
 			}
@@ -105,15 +98,8 @@ func (controller *GitlabController) ListProjects(httpHelper shared.HttpHelper, s
 			if linkHeader == "" || !strings.Contains(linkHeader, sentinel) { // To address the edge cases like last batch is exactly has exactly same length as itemsPerPage, check if there is a next batch link in the header
 				break
 			}
-			projectsUrl = strings.TrimSuffix(strings.TrimPrefix(strings.Split(linkHeader, sentinel)[0], "<"), ">")
+			branchesUrl = strings.TrimSuffix(strings.TrimPrefix(strings.Split(linkHeader, sentinel)[0], "<"), ">")
 		}
-		c.JSON(http.StatusOK, projects)
+		c.JSON(http.StatusOK, branches)
 	}
-}
-
-func MinInt(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
 }

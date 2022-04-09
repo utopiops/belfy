@@ -3,7 +3,6 @@ package bitbucket
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/utopiops-water/git-integration/shared"
@@ -18,18 +17,20 @@ import (
 func (controller *BitbucketController) DeleteApplicationProject(settingsStore stores.SettingsStore) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		authHeader := c.Request.Header.Get("Authorization")
-		tokenString := strings.TrimSpace(strings.SplitN(authHeader, "Bearer", 2)[1])
-		accountID, err := shared.GetAccountId(tokenString)
-		if err != nil {
+		// authHeader := c.Request.Header.Get("Authorization")
+		// tokenString := strings.TrimSpace(strings.SplitN(authHeader, "Bearer", 2)[1])
+		// accountID, err := shared.GetAccountId(tokenString)
+		accountIdInterface, exists := c.Get("accountId")
+		if !exists {
 			c.Status(http.StatusBadRequest)
 			return
 		}
+		accountID := accountIdInterface.(string)
 
 		environmentName := c.Param("env_name")
 		applicationName := c.Param("app_Name")
 
-		err = settingsStore.DeleteBitbucketApplicationSettings(noContext, accountID, environmentName, applicationName)
+		err := settingsStore.DeleteBitbucketApplicationSettings(noContext, accountID, environmentName, applicationName)
 
 		if err != nil {
 			fmt.Println(err.Error())

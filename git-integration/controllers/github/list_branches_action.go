@@ -12,33 +12,25 @@ import (
 )
 
 const (
-	MaxProjectLength int = 150
+	MaxBranchLength int = 150
 )
 
-type project struct {
-	FullName      string `json:"full_name"`
-	RepositoryUrl string `json:"clone_url"`
+type branch struct {
+	Name   string      `json:"name"`
+	Commit interface{} `json:"commit"`
 }
 
-type queryString struct {
-	IntegrationName string `form:"integration_name"`
-	Url             string `form:"url"`
-	AccessToken     string `form:"access_token"`
-}
-
-type IntermediaryError struct {
-}
-
-// @Description get list of all user's repositories
-// @Param integration_name query string true "name of user integration in our system"
-// @Success 200 {array} project	"ok"
-// @Router /github/project [get]
-func (controller *GithubController) ListProjects(httpHelper shared.HttpHelper, settingsStore stores.SettingsStore) gin.HandlerFunc {
+func (controller *GithubController) ListBranches(httpHelper shared.HttpHelper, settingsStore stores.SettingsStore) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		authHeader := c.Request.Header.Get("Authorization")
 
-		var qs queryString
+		var qs struct {
+			IntegrationName string `form:"integration_name"`
+			Url             string `form:"url"`
+			AccessToken     string `form:"access_token"`
+			FullName        string `form:"full_name"`
+		}
 		if c.ShouldBindQuery(&qs) != nil {
 			c.Status(http.StatusBadRequest)
 			return
@@ -67,28 +59,28 @@ func (controller *GithubController) ListProjects(httpHelper shared.HttpHelper, s
 			}
 		}
 
-		// Get the list of projects from Github
+		// Get the list of branches from Github
 
-		// We limit the number of the projects to avoid potential misuse (no idea atm how it could be just don't wanna keep it unlimited), and perhaps allow different tierings in the future
-		projects := make([]project, 0, MaxProjectLength)
-		// SEE: https://docs.github.com/en/rest/reference/repos#list-repositories-for-the-authenticated-user
+		branches := make([]branch, 0, MaxBranchLength)
+		// SEE: https://docs.github.com/en/rest/reference/branches#list-branches
 		itemsPerPage := 100
-		projectsUrl := fmt.Sprintf("%s/user/repos?type=owner&per_page=%d", integration.Url, itemsPerPage)
+		branchesUrl := fmt.Sprintf("%s/repos/%s/branches?per_page=%d", integration.Url, qs.FullName, itemsPerPage)
 		for {
-			projectsHeaders := []shared.Header{
+			branchesHeaders := []shared.Header{
 				{
 					Key:   "Authorization",
 					Value: fmt.Sprintf("token %s", integration.AccessToken),
 				},
 			}
-			out, err, statusCode, header := httpHelper.HttpRequest(http.MethodGet, projectsUrl, nil, projectsHeaders, 0)
+			out, err, statusCode, header := httpHelper.HttpRequest(http.MethodGet, branchesUrl, nil, branchesHeaders, 0)
+			fmt.Println("url:", branchesUrl)
 			fmt.Println("statusCode here", statusCode)
 			if err != nil || statusCode != http.StatusOK {
 
 				c.Status(http.StatusBadRequest)
 				return
 			}
-			var newBatch []project
+			var newBatch []branch
 			err = json.Unmarshal(out, &newBatch)
 			if err != nil {
 				fmt.Println(err.Error())
@@ -96,9 +88,9 @@ func (controller *GithubController) ListProjects(httpHelper shared.HttpHelper, s
 				return
 			}
 
-			limit := MaxProjectLength - len(projects)
-			projects = append(projects, newBatch[:MinInt(limit, len(newBatch))]...)
-			limit = MaxProjectLength - len(projects)
+			limit := MaxBranchLength - len(branches)
+			branches = append(branches, newBatch[:MinInt(limit, len(newBatch))]...)
+			limit = MaxBranchLength - len(branches)
 			if limit == 0 || len(newBatch) < itemsPerPage { // If you've reached the limit or the items returned is less than what it could be (a sign it's finished) stop iterating
 				break
 			}
@@ -107,15 +99,8 @@ func (controller *GithubController) ListProjects(httpHelper shared.HttpHelper, s
 			if linkHeader == "" || !strings.Contains(linkHeader, sentinel) { // To address the edge cases like last batch is exactly has exactly same length as itemsPerPage, check if there is a next batch link in the header
 				break
 			}
-			projectsUrl = strings.TrimSuffix(strings.TrimPrefix(strings.Split(linkHeader, sentinel)[0], "<"), ">")
+			branchesUrl = strings.TrimSuffix(strings.TrimPrefix(strings.Split(linkHeader, sentinel)[0], "<"), ">")
 		}
-		c.JSON(http.StatusOK, projects)
+		c.JSON(http.StatusOK, branches)
 	}
-}
-
-func MinInt(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
 }

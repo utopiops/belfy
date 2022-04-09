@@ -2,14 +2,11 @@ package gitlab
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
-	"gitlab.com/utopiops-water/git-integration/config"
 	"gitlab.com/utopiops-water/git-integration/shared"
 	"gitlab.com/utopiops-water/git-integration/stores"
 )
@@ -30,12 +27,14 @@ func (controller *GitlabController) ListRecentCommits(httpHelper shared.HttpHelp
 	return func(c *gin.Context) {
 
 		authHeader := c.Request.Header.Get("Authorization")
-		tokenString := strings.TrimSpace(strings.SplitN(authHeader, "Bearer", 2)[1])
-		accountID, err := shared.GetAccountId(tokenString)
-		if err != nil {
+		// tokenString := strings.TrimSpace(strings.SplitN(authHeader, "Bearer", 2)[1])
+		// accountID, err := shared.GetAccountId(tokenString)
+		accountIdInterface, exists := c.Get("accountId")
+		if !exists {
 			c.Status(http.StatusBadRequest)
 			return
 		}
+		accountID := accountIdInterface.(string)
 
 		var dateRange pickTimeQuery
 		if c.ShouldBindQuery(&dateRange) != nil {
@@ -58,7 +57,7 @@ func (controller *GitlabController) ListRecentCommits(httpHelper shared.HttpHelp
 			return
 		}
 
-		integration, err := GetIntegrationDetails(settings.IntegrationName, authHeader, httpHelper)
+		integration, err := GetIntegrationDetails(settings.IntegrationName, authHeader, httpHelper, c, settingsStore)
 		if err != nil {
 			c.Status(http.StatusBadRequest)
 			return
@@ -89,7 +88,7 @@ func (controller *GitlabController) ListRecentCommits(httpHelper shared.HttpHelp
 		}
 		out, err, statusCode, _ := httpHelper.HttpRequest(http.MethodGet, commitsUrl, nil, projectsHeaders, 0)
 		if err != nil || statusCode != http.StatusOK {
-			fmt.Println(err.Error())
+			// fmt.Println(err.Error())
 			c.Status(http.StatusBadRequest)
 			return
 		}
@@ -98,55 +97,4 @@ func (controller *GitlabController) ListRecentCommits(httpHelper shared.HttpHelp
 		c.JSON(http.StatusOK, commits)
 
 	}
-}
-
-func GetIntegrationDetails(integrationName, authHeader string, httpHelper shared.HttpHelper) (resolved *resolvedIntegration, err error) {
-	// Get the access token and url
-	method := http.MethodGet
-	url := config.Configs.Endpoints.Core + fmt.Sprintf("/integration/%s", integrationName)
-	headers := []shared.Header{
-		{
-			Key:   "Authorization",
-			Value: authHeader, // We just pass on the user's token
-		},
-	}
-	out, err, statusCode, _ := httpHelper.HttpRequest(method, url, nil, headers, 0)
-	if err != nil || statusCode != http.StatusOK {
-		err = errors.New("Failed to get integration")
-		return
-	}
-	var integration struct {
-		Url       string `json:"url"`
-		TokenName string `json:"tokenName"`
-	}
-	err = json.Unmarshal(out, &integration)
-	if err != nil {
-		err = errors.New("Failed to unmarshal integration")
-		return
-	}
-
-	// Get the access token's value
-	secretValueUrl := fmt.Sprintf("%s/simple/%s/value", config.Configs.Endpoints.SecretManager, integration.TokenName)
-	secretValueHeaders := []shared.Header{
-		{
-			Key:   "Authorization",
-			Value: authHeader, // We just pass on the user's token
-		},
-	}
-	out, err, statusCode, _ = httpHelper.HttpRequest(http.MethodGet, secretValueUrl, nil, secretValueHeaders, 0)
-	if err != nil || statusCode != http.StatusOK {
-		err = errors.New("Failed to get access token")
-		return
-	}
-	resolved = &resolvedIntegration{
-		Url:         integration.Url,
-		AccessToken: string(out),
-	}
-	return
-
-}
-
-type resolvedIntegration struct {
-	Url         string
-	AccessToken string
 }

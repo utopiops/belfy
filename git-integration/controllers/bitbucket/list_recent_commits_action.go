@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -33,12 +32,14 @@ func (controller *BitbucketController) ListRecentCommits(httpHelper shared.HttpH
 	return func(c *gin.Context) {
 
 		authHeader := c.Request.Header.Get("Authorization")
-		tokenString := strings.TrimSpace(strings.SplitN(authHeader, "Bearer", 2)[1])
-		accountID, err := shared.GetAccountId(tokenString)
-		if err != nil {
+		// tokenString := strings.TrimSpace(strings.SplitN(authHeader, "Bearer", 2)[1])
+		// accountID, err := shared.GetAccountId(tokenString)
+		accountIdInterface, exists := c.Get("accountId")
+		if !exists {
 			c.Status(http.StatusBadRequest)
 			return
 		}
+		accountID := accountIdInterface.(string)
 
 		var dateRange pickTimeQuery
 		if c.ShouldBindQuery(&dateRange) != nil {
@@ -61,7 +62,7 @@ func (controller *BitbucketController) ListRecentCommits(httpHelper shared.HttpH
 			return
 		}
 
-		integration, err := GetIntegrationDetails(settings.IntegrationName, authHeader, httpHelper)
+		integration, err := GetIntegrationDetails(settings.IntegrationName, authHeader, httpHelper, c)
 		if err != nil {
 			c.Status(http.StatusBadRequest)
 			return
@@ -78,7 +79,7 @@ func (controller *BitbucketController) ListRecentCommits(httpHelper shared.HttpH
 		}
 		out, err, statusCode, _ := httpHelper.HttpRequest(http.MethodGet, commitsUrl, nil, projectsHeaders, 0)
 		if err != nil || statusCode != http.StatusOK {
-			fmt.Println(err.Error())
+			// fmt.Println(err.Error())
 			c.Status(http.StatusBadRequest)
 			return
 		}
@@ -125,7 +126,7 @@ func (controller *BitbucketController) ListRecentCommits(httpHelper shared.HttpH
 	}
 }
 
-func GetIntegrationDetails(integrationName, authHeader string, httpHelper shared.HttpHelper) (resolved *resolvedIntegration, err error) {
+func GetIntegrationDetails(integrationName, authHeader string, httpHelper shared.HttpHelper, c *gin.Context) (resolved *resolvedIntegration, err error) {
 	// Get the access token and url
 	method := http.MethodGet
 	url := config.Configs.Endpoints.Core + fmt.Sprintf("/integration/%s", integrationName)
@@ -134,6 +135,17 @@ func GetIntegrationDetails(integrationName, authHeader string, httpHelper shared
 			Key:   "Authorization",
 			Value: authHeader, // We just pass on the user's token
 		},
+	}
+	idToken, err := c.Cookie("id_token")
+	/*if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}*/
+	if err == nil {
+		headers = append(headers, shared.Header{
+			Key:   "Cookie",
+			Value: fmt.Sprintf("id_token=%s", idToken),
+		})
 	}
 	out, err, statusCode, _ := httpHelper.HttpRequest(method, url, nil, headers, 0)
 	if err != nil || statusCode != http.StatusOK {
@@ -158,14 +170,39 @@ func GetIntegrationDetails(integrationName, authHeader string, httpHelper shared
 			Value: authHeader, // We just pass on the user's token
 		},
 	}
+	idToken, err = c.Cookie("id_token")
+	/*if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}*/
+	if err == nil {
+		secretValueHeaders = append(secretValueHeaders, shared.Header{
+			Key:   "Cookie",
+			Value: fmt.Sprintf("id_token=%s", idToken),
+		})
+	}
 	out, err, statusCode, _ = httpHelper.HttpRequest(http.MethodGet, secretValueUrl, nil, secretValueHeaders, 0)
 	if err != nil || statusCode != http.StatusOK {
-		err = errors.New("Failed to get access token")
+		err = errors.New("failed to get access token from secret manager")
+		return
+	}
+	accessToken, err := GetBitbucketAccessToken(string(out), httpHelper)
+	if err != nil {
+		err = errors.New("failed to get access token from bitbucket")
 		return
 	}
 
+	resolved = &resolvedIntegration{
+		Url:         integration.Url,
+		AccessToken: accessToken,
+	}
+	return
+
+}
+
+func GetBitbucketAccessToken(secretManagerToken string, httpHelper shared.HttpHelper) (accessToken string, err error) {
 	// Get the Access token value from bitbucket access token services
-	encoded_token := base64.StdEncoding.EncodeToString([]byte(string(out)))
+	encoded_token := base64.StdEncoding.EncodeToString([]byte(secretManagerToken))
 	accessTokenHeaders := []shared.Header{
 		{
 			Key:   "Authorization",
@@ -176,7 +213,7 @@ func GetIntegrationDetails(integrationName, authHeader string, httpHelper shared
 			Value: "application/x-www-form-urlencoded",
 		},
 	}
-	out, err, statusCode, _ = httpHelper.HttpRequest(http.MethodPost, bitbucketAccessTokenUrl, bytes.NewBuffer([]byte("grant_type=client_credentials")), accessTokenHeaders, 0)
+	out, err, statusCode, _ := httpHelper.HttpRequest(http.MethodPost, bitbucketAccessTokenUrl, bytes.NewBuffer([]byte("grant_type=client_credentials")), accessTokenHeaders, 0)
 	if err != nil || statusCode != http.StatusOK {
 		err = errors.New("Failed to get access token")
 		return
@@ -194,12 +231,7 @@ func GetIntegrationDetails(integrationName, authHeader string, httpHelper shared
 		err = errors.New("Failed to unmarshal bitbucket access token")
 		return
 	}
-	resolved = &resolvedIntegration{
-		Url:         integration.Url,
-		AccessToken: accTokenRespone.AccessToken,
-	}
-	return
-
+	return accTokenRespone.AccessToken, nil
 }
 
 type resolvedIntegration struct {

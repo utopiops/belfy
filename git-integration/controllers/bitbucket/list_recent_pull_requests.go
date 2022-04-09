@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/utopiops-water/git-integration/shared"
@@ -24,12 +23,14 @@ func (controller *BitbucketController) ListRecentPullRequests(httpHelper shared.
 	return func(c *gin.Context) {
 
 		authHeader := c.Request.Header.Get("Authorization")
-		tokenString := strings.TrimSpace(strings.SplitN(authHeader, "Bearer", 2)[1])
-		accountID, err := shared.GetAccountId(tokenString)
-		if err != nil {
+		// tokenString := strings.TrimSpace(strings.SplitN(authHeader, "Bearer", 2)[1])
+		// accountID, err := shared.GetAccountId(tokenString)
+		accountIdInterface, exists := c.Get("accountId")
+		if !exists {
 			c.Status(http.StatusBadRequest)
 			return
 		}
+		accountID := accountIdInterface.(string)
 
 		var dateRange pickTimeQuery
 		if c.ShouldBindQuery(&dateRange) != nil {
@@ -52,7 +53,7 @@ func (controller *BitbucketController) ListRecentPullRequests(httpHelper shared.
 			return
 		}
 
-		integration, err := GetIntegrationDetails(settings.IntegrationName, authHeader, httpHelper)
+		integration, err := GetIntegrationDetails(settings.IntegrationName, authHeader, httpHelper, c)
 		if err != nil {
 			c.Status(http.StatusBadRequest)
 			return
@@ -83,7 +84,7 @@ func (controller *BitbucketController) ListRecentPullRequests(httpHelper shared.
 		}
 		out, err, statusCode, _ := httpHelper.HttpRequest(http.MethodGet, pullsUrl, nil, pullsHeaders, 0)
 		if err != nil || statusCode != http.StatusOK {
-			fmt.Println(err.Error())
+			// fmt.Println(err.Error())
 			c.Status(http.StatusBadRequest)
 			return
 		}

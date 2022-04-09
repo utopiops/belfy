@@ -14,11 +14,14 @@ const (
 )
 
 type project struct {
-	FullName string `json:"full_name"`
+	FullName string                 `json:"full_name"`
+	Links    map[string]interface{} `json:"links"`
 }
 
 type queryString struct {
 	IntegrationName string `form:"integration_name"`
+	Url             string `form:"url"`
+	AccessToken     string `form:"access_token"`
 }
 
 type IntermediaryError struct {
@@ -38,11 +41,35 @@ func (controller *BitbucketController) ListProjects(httpHelper shared.HttpHelper
 			c.Status(http.StatusBadRequest)
 			return
 		}
-
-		integration, err := GetIntegrationDetails(qs.IntegrationName, authHeader, httpHelper)
-		if err != nil {
-			c.Status(http.StatusBadRequest)
+		if qs.IntegrationName == "" && (qs.AccessToken == "" || qs.Url == "") {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"err": "invalid query string parameters",
+			})
 			return
+		}
+
+		var integration *resolvedIntegration
+		if qs.IntegrationName != "" {
+			var err error
+			integration, err = GetIntegrationDetails(qs.IntegrationName, authHeader, httpHelper, c)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"err": "invalid integration name",
+				})
+				return
+			}
+		} else {
+			accessToken, err := GetBitbucketAccessToken(qs.AccessToken, httpHelper)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"err": err.Error(),
+				})
+				return
+			}
+			integration = &resolvedIntegration{
+				Url:         qs.Url,
+				AccessToken: accessToken,
+			}
 		}
 
 		// Get the list of projects from Bitbucket
@@ -62,7 +89,7 @@ func (controller *BitbucketController) ListProjects(httpHelper shared.HttpHelper
 			out, err, statusCode, _ := httpHelper.HttpRequest(http.MethodGet, projectsUrl, nil, projectsHeaders, 0)
 			fmt.Println("statusCode here", statusCode)
 			if err != nil || statusCode != http.StatusOK {
-				fmt.Println(err.Error())
+				// fmt.Println(err.Error())
 				c.Status(http.StatusBadRequest)
 				return
 			}
