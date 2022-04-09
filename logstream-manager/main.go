@@ -5,12 +5,14 @@ import (
 	"os"
 
 	"gitlab.com/utopiops-water/logstream-manager/db"
-	"gitlab.com/utopiops-water/logstream-manager/middlewares"
 	"gitlab.com/utopiops-water/logstream-manager/models/job_log_model"
 	"gitlab.com/utopiops-water/logstream-manager/stores"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/newrelic/go-agent/v3/integrations/nrgin"
+	"github.com/newrelic/go-agent/v3/newrelic"
+	"gitlab.com/utopiops-water/framework/middlewares"
 	"gitlab.com/utopiops-water/logstream-manager/config"
 	hc "gitlab.com/utopiops-water/logstream-manager/controllers/health"
 	jlc "gitlab.com/utopiops-water/logstream-manager/controllers/job_log_controller"
@@ -43,7 +45,33 @@ func main() {
 	r := gin.Default()
 
 	// Middlewares
-	r.Use(middlewares.CORSMiddleware())
+	middlewares.SetAppName(config.Configs.Secrets.AppName)
+	middlewares.SetAccessManagerUrl(config.Configs.Endpoints.AccessManager)
+	tempIdsMiddleware := middlewares.NewTempIdsMiddleware(
+		config.Configs.Endpoints.IdsPublic,
+		config.Configs.Endpoints.IdsAdmin,
+		config.Configs.Endpoints.IdsJwks,
+		config.Configs.Secrets.AuthServerJwtSecret,
+	)
+
+	auditMiddleware := middlewares.NewAuditMiddleware(
+		config.Configs.Endpoints.AuditManager,
+		config.Configs.Secrets.AppName,
+		config.Configs.Endpoints.IdsPublic,
+		config.Configs.Secrets.ClientId, config.Configs.Secrets.ClientSecret,
+	)
+
+	// New Relic gin middleware (https://pkg.go.dev/github.com/newrelic/go-agent/v3/integrations/nrgin#section-readme)
+	newRelicApp, err := newrelic.NewApplication(
+		newrelic.ConfigAppName(config.Configs.Secrets.NewRelicAppName),
+		newrelic.ConfigLicense(config.Configs.Secrets.NewRelicLicense),
+		newrelic.ConfigDistributedTracerEnabled(true),
+	)
+	if err == nil {
+		r.Use(nrgin.Middleware(newRelicApp))
+	}
+
+	r.Use(middlewares.CORSMiddleware(config.Configs.App.AllowedOrigins))
 
 	// TODO: Providers to be called here
 	jobLogController := jlc.JobLogController{}
@@ -55,9 +83,13 @@ func main() {
 	r.GET("/health", healthCheckController.GetStatus(settingsStore))
 
 	// Authorized routes
-	r.Use(middlewares.JwtAuthorizationMiddleware())
-	r.GET("/log/job", jobLogController.GetLog(jobLogStore))
-	r.POST("/log/job", jobLogController.SaveLog(jobLogStore))
+	// r.Use(middlewares.JwtAuthorizationMiddleware())
+	r.Use(tempIdsMiddleware.IdsAuthorizationMiddleware())
+
+	r.GET("/log/job",
+		auditMiddleware.Audit("Get logs of job"), jobLogController.GetLog(jobLogStore))
+	r.POST("/log/job",
+		auditMiddleware.Audit("Save logs of job"), jobLogController.SaveLog(jobLogStore))
 
 	r.Run(":" + config.Configs.App.Port)
 }

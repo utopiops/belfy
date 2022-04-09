@@ -2,7 +2,14 @@ FROM golang:1.16.4 AS go-build
 
 ENV GO111MODULE=on
 
+ARG GITLAB_ACCESS_USERNAME
+ARG GITLAB_ACCESS_PASSWORD
+RUN echo https://${GITLAB_ACCESS_USERNAME}:${GITLAB_ACCESS_PASSWORD}@gitlab.com >> ~/.git-credentials && git config --global credential.helper 'store --file ~/.git-credentials'
+
 WORKDIR /go/src/gitlab.com/utopiops-water/logstream-manager
+
+ENV GONOSUMDB=gitlab.com/utopiops-water
+ENV GOPRIVATE=gitlab.com/utopiops-water/*
 
 COPY go.mod .
 COPY go.sum .

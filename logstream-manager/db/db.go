@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"gitlab.com/utopiops-water/logstream-manager/db/migrate/postgresql"
 )
 

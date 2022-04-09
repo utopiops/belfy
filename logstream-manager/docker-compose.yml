@@ -13,15 +13,19 @@ services:
   logstream-manager:
     build:
       context: .
-      dockerfile: Dockerfile-dev
+      args:
+          - GITLAB_ACCESS_USERNAME=$GITLAB_ACCESS_USERNAME
+          - GITLAB_ACCESS_PASSWORD=$GITLAB_ACCESS_PASSWORD
+      dockerfile: Dockerfile.dev
     hostname: logstream-manager
     volumes:
       - .:/go/src/gitlab.com/utopiops-water/logstream-manager
+    working_dir: /go/src/gitlab.com/utopiops-water/logstream-manager
     command: go run main.go
     networks:
         - default
     ports:
-      - '3003:3003'
+      - '3003:3000'
     depends_on:
       - pgdb
 

@@ -14,6 +14,10 @@ var Migrations = []struct {
 		Name: "create-table-logs",
 		Stmt: createTableLogs,
 	},
+	{
+		Name: "change_type_of_payload_field_of_logs_table",
+		Stmt: changeTypeOfPayloadFieldOfLogsTable,
+	},
 }
 
 // Migrate performs the database migration. If the migration fails
@@ -100,4 +104,9 @@ job_id         		VARCHAR(100)
 ,payload		        VARCHAR(1000)
 ,is_last_line       BOOLEAN
 );
+`
+
+var changeTypeOfPayloadFieldOfLogsTable = `
+ALTER TABLE logs
+ALTER COLUMN payload TYPE TEXT;
 `

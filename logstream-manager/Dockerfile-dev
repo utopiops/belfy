@@ -1,6 +1,0 @@
-FROM golang:1.16.4 AS go-build
-
-ENV GO111MODULE=on
-
-WORKDIR /go/src/gitlab.com/utopiops-water/logstream-manager
-
