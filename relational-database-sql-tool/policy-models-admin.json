@@ -1,0 +1,13 @@
+{
+    "name": "relational_database_sql_tool_service_admin",
+    "statements": [
+        {
+            "name": "admin_database",
+            "resource": "env/*",
+            "actions": [
+                ".*"
+            ],
+            "effect": "allow"
+        }
+    ]
+}

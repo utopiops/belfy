@@ -1,0 +1,7 @@
+.vscode
+*.out
+.env
+release/
+vendor/
+.env.local
+.idea

@@ -1,0 +1,268 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the relational-database-sql-tool API Documentation.",
+        "title": "Relational Database Sql Tool API",
+        "contact": {
+            "name": "Utopiops",
+            "url": "http://www.utopiops.com",
+            "email": "contactus@utopiops.com"
+        },
+        "license": {
+            "name": "Copyright (C) Utopiops"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/rds/environment/name/{env_name}/database/name/{db_name}/get_table_rows": {
+            "post": {
+                "description": "get top 100 rows of a specific table",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user's database server",
+                        "name": "db_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "username, password, database name and table name are necessary to get top 100 rows of a table",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rds.RDSQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rds/environment/name/{env_name}/database/name/{db_name}/list_db": {
+            "post": {
+                "description": "get list of all databases for a specific database server",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user's database server",
+                        "name": "db_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "username, password and default database name are necessary to get list of databases",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rds.RDSQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rds/environment/name/{env_name}/database/name/{db_name}/list_table": {
+            "post": {
+                "description": "get list of all tables for a specific database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user's database server",
+                        "name": "db_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "username, password and database name are necessary to get list of tables",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rds.RDSQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rds/environment/name/{env_name}/database/name/{db_name}/query": {
+            "post": {
+                "description": "execute user's query and return results",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user's database server",
+                        "name": "db_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "username, password, database name and statement are necessary to execute a user query",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rds.RDSQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rds/environment/name/{env_name}/database/name/{db_name}/settings": {
+            "post": {
+                "description": "stores some information of a specific database server on our system",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user's database server",
+                        "name": "db_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/settings/environment/name/{env_name}/database/name/{db_name}/enabled": {
+            "get": {
+                "description": "checks that we stored information of a specific database server on our system or not",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user's database server",
+                        "name": "db_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "rds.RDSQuery": {
+            "type": "object",
+            "properties": {
+                "database": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "statement": {
+                    "type": "string"
+                },
+                "table": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

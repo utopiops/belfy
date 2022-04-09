@@ -1,0 +1,13 @@
+{
+    "name": "relational_database_sql_tool_service_read_only",
+    "statements": [
+        {
+            "name": "read_database",
+            "resource": "env/*",
+            "actions": [
+                "get"
+            ],
+            "effect": "allow"
+        }
+    ]
+}

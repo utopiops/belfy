@@ -1,0 +1,181 @@
+definitions:
+  rds.RDSQuery:
+    properties:
+      database:
+        type: string
+      password:
+        type: string
+      statement:
+        type: string
+      table:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: contactus@utopiops.com
+    name: Utopiops
+    url: http://www.utopiops.com
+  description: This is the relational-database-sql-tool API Documentation.
+  license:
+    name: Copyright (C) Utopiops
+  title: Relational Database Sql Tool API
+  version: 1.0.0
+paths:
+  /rds/environment/name/{env_name}/database/name/{db_name}/get_table_rows:
+    post:
+      description: get top 100 rows of a specific table
+      parameters:
+      - description: name of user environment in our system
+        in: path
+        name: env_name
+        required: true
+        type: string
+      - description: name of user's database server
+        in: path
+        name: db_name
+        required: true
+        type: string
+      - description: username, password, database name and table name are necessary
+          to get top 100 rows of a table
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/rds.RDSQuery'
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              type: string
+            type: array
+  /rds/environment/name/{env_name}/database/name/{db_name}/list_db:
+    post:
+      description: get list of all databases for a specific database server
+      parameters:
+      - description: name of user environment in our system
+        in: path
+        name: env_name
+        required: true
+        type: string
+      - description: name of user's database server
+        in: path
+        name: db_name
+        required: true
+        type: string
+      - description: username, password and default database name are necessary to
+          get list of databases
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/rds.RDSQuery'
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              type: string
+            type: array
+  /rds/environment/name/{env_name}/database/name/{db_name}/list_table:
+    post:
+      description: get list of all tables for a specific database
+      parameters:
+      - description: name of user environment in our system
+        in: path
+        name: env_name
+        required: true
+        type: string
+      - description: name of user's database server
+        in: path
+        name: db_name
+        required: true
+        type: string
+      - description: username, password and database name are necessary to get list
+          of tables
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/rds.RDSQuery'
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              type: string
+            type: array
+  /rds/environment/name/{env_name}/database/name/{db_name}/query:
+    post:
+      description: execute user's query and return results
+      parameters:
+      - description: name of user environment in our system
+        in: path
+        name: env_name
+        required: true
+        type: string
+      - description: name of user's database server
+        in: path
+        name: db_name
+        required: true
+        type: string
+      - description: username, password, database name and statement are necessary
+          to execute a user query
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/rds.RDSQuery'
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              type: string
+            type: array
+  /rds/environment/name/{env_name}/database/name/{db_name}/settings:
+    post:
+      description: stores some information of a specific database server on our system
+      parameters:
+      - description: name of user environment in our system
+        in: path
+        name: env_name
+        required: true
+        type: string
+      - description: name of user's database server
+        in: path
+        name: db_name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              type: string
+            type: array
+  /settings/environment/name/{env_name}/database/name/{db_name}/enabled:
+    get:
+      description: checks that we stored information of a specific database server
+        on our system or not
+      parameters:
+      - description: name of user environment in our system
+        in: path
+        name: env_name
+        required: true
+        type: string
+      - description: name of user's database server
+        in: path
+        name: db_name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              type: string
+            type: array
+swagger: "2.0"
