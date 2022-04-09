@@ -12,8 +12,8 @@ class AwsGlobalResourcesBaseHelper {
         var rootFolderPath = `${config.userInfRootPath}/user-infrastructure/${accountId}/global/vpc/${randomPath}`;
 
         this.initializeMainTerraform({
-            accessKey: 'AKIAIQNLNXILP42UMQRA', // TODO: Get these from the DB
-            secretKey: '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',
+            accessKey: '????', // TODO: Get these from the DB
+            secretKey: '????',
             region: 'ap-southeast-2'
         }, rootFolderPath);
 

@@ -12,8 +12,8 @@ class KubernetesService {
         const accountId = params.accountId;
         const infrastructureDetails = params.details.infrastructure;
         const clusterDetails = {
-            accessKey: 'AKIAIQNLNXILP42UMQRA', // TODO: Get these from the DB
-            secretKey: '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',
+            accessKey: '????', // TODO: Get these from the DB
+            secretKey: '????',
             region: 'ap-southeast-2',
             clusterName: infrastructureDetails.clusterName,
             maxInstanceSize: infrastructureDetails.maxInstanceSize,
