@@ -1,0 +1,25 @@
+{
+    "name": "git_integration_service_read_only",
+    "statements": [
+        {
+            "name": "read_github",
+            "resource": "github/*",
+            "actions": [
+                [
+                    "get"
+                ]
+            ],
+            "effect": "allow"
+        },
+        {
+            "name": "read_gitlab",
+            "resource": "gitlab/*",
+            "actions": [
+                [
+                    "get"
+                ]
+            ],
+            "effect": "allow"
+        }
+    ]
+}

@@ -1,0 +1,40 @@
+version: '3'
+services:
+  pgdb:
+    image: postgres
+    hostname: pgdb
+    env_file:
+      - postgres.env
+    volumes:
+      - 'pg_data:/var/lib/postgresql/data/'
+    ports:
+      - '5432:5432'
+    restart: unless-stopped
+  git-integration:
+    build:
+      context: .
+      args:
+          - GITLAB_ACCESS_USERNAME=$GITLAB_ACCESS_USERNAME
+          - GITLAB_ACCESS_PASSWORD=$GITLAB_ACCESS_PASSWORD
+      dockerfile: Dockerfile.dev
+    hostname: git-integration
+    volumes:
+      - .:/go/src/gitlab.com/utopiops-water/git-integration
+    working_dir: /go/src/gitlab.com/utopiops-water/git-integration
+    command: go run main.go
+    networks: 
+      - default
+    ports:
+      - '3012:3000'
+    depends_on:
+      - pgdb
+
+volumes:
+  pg_data:
+
+networks:
+  default:
+    external:
+      name: dev
+      
+      
