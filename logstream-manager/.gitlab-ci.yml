@@ -1,0 +1,103 @@
+stages:
+  - build
+  - push image
+  - deploy
+
+variables:
+  app: lsm
+  repo_name: lsm-main
+  AWS_DEFAULT_REGION: us-east-1
+
+build: &build
+  image: utopiops/devops:assume-role-12
+  stage: build
+  services:
+    - docker:stable-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+    ECR_REGISTRY_URL: "${DEV_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com"
+    image_tag_commit_sha: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
+    image_tag_pipeline_id: ${CI_COMMIT_REF_SLUG}-${CI_PIPELINE_ID}
+    environment: staging
+    AWS_ACCESS_KEY_ID: ${DEV_AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${DEV_AWS_SECRET_ACCESS_KEY}
+  script:
+    - docker version
+    - cp .env.${environment} .env
+    - docker build .
+    - docker build  -t ${ECR_REGISTRY_URL}/${environment}-${repo_name}:${image_tag_commit_sha} -t ${ECR_REGISTRY_URL}/${environment}-${repo_name}:${image_tag_pipeline_id} .
+    - docker push ${ECR_REGISTRY_URL}/${environment}-${repo_name}:${image_tag_commit_sha}
+    - docker push ${ECR_REGISTRY_URL}/${environment}-${repo_name}:${image_tag_pipeline_id}
+    - docker images
+  except:
+    - schedules
+
+build:production:
+  <<: *build
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+    ECR_REGISTRY_URL: "${PRODUCTION_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com"
+    image_tag_commit_sha: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
+    image_tag_pipeline_id: ${CI_COMMIT_REF_SLUG}-${CI_PIPELINE_ID}
+    environment: production
+    AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
+  only:
+    - master
+  except:
+    - schedules
+
+deploy:staging: &deploy
+  image: utopiops/devops:assume-role-12
+  stage: deploy
+  variables:
+    image_tag_commit_sha: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
+    image_tag_pipeline_id: ${CI_COMMIT_REF_SLUG}-${CI_PIPELINE_ID}
+    CORE_USERNAME: ${DEV_CORE_USERNAME}
+    CORE_PASSWORD: ${DEV_CORE_PASSWORD}
+    AWS_ACCESS_KEY_ID: ${DEV_AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${DEV_AWS_SECRET_ACCESS_KEY}
+    environment: staging
+    core_url: https://core.staging.utopiops.com
+  script:
+    - echo ${image_tag_pipeline_id}
+    - template='{ "username":"%s", "password":"%s" }'
+    - printf "$template" "${CORE_USERNAME}" "${CORE_PASSWORD}" > login.json
+    - token=$(curl -X POST ${core_url}/auth/login -H "Content-Type:application/json" -d @login.json | jq -r .token)
+    - |
+      deployment=$( jq -n \
+       --arg mainImageTag "${image_tag_pipeline_id}" \
+       --arg commitId "${CI_COMMIT_SHORT_SHA}" \
+       --arg pipelineId "${CI_PIPELINE_ID}" \
+       --arg pipelineLink "${CI_JOB_URL}" \
+       --arg pipelineJobId "${CI_JOB_ID}" \
+       --arg releaseTag "${CI_COMMIT_SHORT_SHA}" \
+       --arg releaseNotes "${CI_COMMIT_MESSAGE}" \
+       '{ variables: { container_tags: { main: $mainImageTag } }, commitId: $commitId, pipelineId: $pipelineId, pipelineLink: $pipelineLink, pipelineJobId: $pipelineJobId, releaseTag: $releaseTag, releaseNotes: $releaseNotes }'
+       )
+    - echo ${deployment}
+    - curl -X POST ${core_url}/v3/applications/environment/name/${environment}/application/name/${app}/deploy -H "Content-Type:application/json" -H "Authorization:Bearer ${token}" --data "${deployment}"
+  except:
+    - schedules
+
+deploy:production:
+  <<: *deploy
+  image: utopiops/devops:assume-role-12
+  stage: deploy
+  variables:
+    image_tag_commit_sha: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
+    image_tag_pipeline_id: ${CI_COMMIT_REF_SLUG}-${CI_PIPELINE_ID}
+    CORE_USERNAME: ${PRODUCTION_CORE_USERNAME}
+    CORE_PASSWORD: ${PRODUCTION_CORE_PASSWORD}
+    AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
+    environment: production
+    core_url: https://core.utopiops.com
+  only:
+    - master
+  except:
+    - schedules
