@@ -1,0 +1,13 @@
+{
+    "name": "log_integration_admin",
+    "statements": [
+        {
+            "name": "log_integration_application_admin",
+            "resource": "env/*",
+            "actions": [
+                ".*"
+            ],
+            "effect": "allow"
+        }
+    ]
+}

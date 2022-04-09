@@ -1,0 +1,13 @@
+{
+    "name": "log_integration_read_only",
+    "statements": [
+        {
+            "name": "log_integration_application_read",
+            "resource": "env/*",
+            "actions": [
+                "get"
+            ],
+            "effect": "allow"
+        }
+    ]
+}
