@@ -1,0 +1,45 @@
+module "rds-{{{data.environment}}}-{{{data.dbsName}}}" {
+  source                      = "{{{data.rdsModulePath}}}"
+  vpc_security_group_id       = "${data.terraform_remote_state.environment-base.outputs.vpc_default_security_group_id}"
+  subnet_group                = "${data.terraform_remote_state.environment-base.outputs.private_subnets}"
+  vpc_id                      = "${data.terraform_remote_state.environment-base.outputs.vpc_id}"
+  allocated_storage           = "{{{data.allocated_storage}}}"  
+  engine_type                 = "{{{data.engineType}}}"  
+  engine_category             = "{{{data.engineCategory}}}"  
+  engine_version              = "{{{data.engineVersion}}}"  
+  instance_class              = "{{{data.instanceClass}}}"  
+  db_identifier               = "{{{data.dbsName}}}"  
+  database_name               = "{{{data.databaseName}}}"  
+  database_user               = "{{{data.databaseUser}}}"  
+  database_password           = "{{{data.databasePassword}}}"  
+  database_port               = "{{{data.databasePort}}}"
+  is_multi_az                 = "{{{data.isMultiAz}}}"
+  storage_type                = "{{{data.storageType}}}"
+  publicly_accessible         = "{{{data.publiclyAccessible}}}"
+  allow_major_version_upgrade = "{{{data.allowMajorVersionUpgrade}}}"
+  auto_minor_version_upgrade  = "{{{data.autoMinorVersionUpgrade}}}"
+  apply_immediately           = "{{{data.applyImmediately}}}"
+  maintenance_window          = "{{{data.maintenanceWindow}}}"
+  skip_final_snapshot         = "{{{data.skipFinalSnapshot}}}"
+  copy_tags_to_snapshot       = "{{{data.copyTagsToSnapshot}}}"
+  backup_retention_period     = "{{{data.backupRetentionPeriod}}}"
+  backup_window               = "{{{data.backupWindow}}}"
+  parameter_group_family      = "{{{data.parameterGroupFamily}}}"
+  env_name                    = "{{{data.environment}}}"
+  region                      = "{{{data.remoteStateRegion}}}"
+  {{#if data.iops}}
+  iops                        = "{{{data.iops}}}"
+  {{/if}}
+  function_name               = "{{{data.sqlLambdaFunctionName}}}"
+
+
+}
+
+data "terraform_remote_state" "environment-base" {
+  backend = "s3"
+  config = {
+    bucket = "{{{data.remoteStateBucket}}}"
+    key    = "{{{data.remoteStateKey}}}"
+    region = "{{{data.remoteStateRegion}}}"
+  }
+}

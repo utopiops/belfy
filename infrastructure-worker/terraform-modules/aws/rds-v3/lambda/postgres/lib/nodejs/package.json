@@ -1,0 +1,9 @@
+{
+  "name": "lib-layer",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "pg": "^8.6.0"
+  },
+  "scripts": {}
+}

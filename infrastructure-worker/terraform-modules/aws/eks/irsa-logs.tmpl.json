@@ -1,0 +1,15 @@
+{
+  "Statement": [{
+    "Action": "sts:AssumeRoleWithWebIdentity",
+    "Effect": "Allow",
+    "Principal": {
+      "Federated": "${oidc_arn}"
+    },
+    "Condition": {
+      "StringEquals": {
+        "${condition_key}": "system:serviceaccount:amazon-cloudwatch:fluentd"
+      }
+    }
+  }],
+  "Version": "2012-10-17"
+}

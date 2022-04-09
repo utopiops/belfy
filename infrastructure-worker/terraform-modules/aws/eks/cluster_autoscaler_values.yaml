@@ -1,0 +1,12 @@
+autoDiscovery:
+  enabled: true
+sslCertPath: "/etc/ssl/certs/ca-bundle.crt"
+cloudProvider: aws
+rbac:
+  create: true
+  serviceAccountName: cluster-autoscaler
+tolerations:
+  - operator: Exists
+    effect: NoExecute
+  - operator: Exists
+    effect: NoSchedule

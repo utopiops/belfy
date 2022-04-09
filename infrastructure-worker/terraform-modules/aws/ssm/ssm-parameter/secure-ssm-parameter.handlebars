@@ -1,0 +1,8 @@
+resource "aws_ssm_parameter" "secret" {
+  name        = "${var.name}"
+  type        = "SecureString"
+  value       = "${var.value}"
+   lifecycle {
+    ignore_changes = ["value", "overwrite"]
+  }
+}

@@ -1,0 +1,32 @@
+resource "aws_cloudwatch_metric_alarm" "alarm" {
+  alarm_name                = "{{{alarmName}}}"
+  comparison_operator       = "{{{comparisonOperator}}}"
+  evaluation_periods        = "{{{evaluationPeriods}}}"
+  metric_name               = "{{{metricName}}}"
+  namespace                 = "{{{namespace}}}"
+  period                    = "{{{period}}}"
+  statistic                 = "{{{statistic}}}"
+  threshold                 = "{{{threshold}}}"
+  alarm_description         = "{{{alarmDescription}}}"
+  alarm_actions             = ["${aws_sns_topic.alarm_notification.arn}"]
+  ok_actions                = ["${aws_sns_topic.alarm_notification.arn}"]
+
+  {{#if dimensions}}
+  dimensions = {
+    {{#each dimensions}}
+    {{{key}}} = "{{{value}}}"
+    {{/each}}
+  }
+  {{/if}}
+}
+
+resource "aws_sns_topic" "alarm_notification" {
+  name = "{{{alarmName}}}"
+}
+
+resource "aws_sns_topic_subscription" "alarm_notification_subscription" {
+  topic_arn              = "${aws_sns_topic.alarm_notification.arn}"
+  protocol               = "https"
+  endpoint               = "{{{endpoint}}}"
+  endpoint_auto_confirms = true
+}

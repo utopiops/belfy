@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+      nodeSelector:
+        beta.kubernetes.io/arch: amd64
+        beta.kubernetes.io/instance-type: t3.micro
+        beta.kubernetes.io/os: linux
+        eks.amazonaws.com/capacityType: SPOT
+        kubernetes.io/arch: amd64
+        kubernetes.io/os: linux
+        node.kubernetes.io/instance-type: t3.micro
+# ---
+# kind: Service
+# apiVersion: v1
+# metadata:
+#   name: nginx-service
+# spec:
+#   selector:
+#     app: nginx
+#   ports:
+#   - name: http
+#     port: 80
+#     protocol: TCP
+#     targetPort: 80
+#   type: ClusterIP
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: example-ingress
+#   annotations:
+#     ingress.kubernetes.io/rewrite-target: /
+# spec:
+#   ingressClassName: nginx
+#   rules:
+#   - host: nginxtest01.containers.staging.utopiops.com
+#     http:
+#       paths:
+#       - backend:
+#           service:
+#             name: nginx-service
+#             port:
+#               number: 80
+#         path: /
+#         pathType: Prefix
+#   tls:
+#   - hosts:
+#     - '*.containers.staging.utopiops.com'
+#     secretName: cluster-base-tls
+
+# full test:
+# curl -X POST -H 'Content-Type: aaplication/json' -d '{ "appName": "anyname", "domain": "containers.staging.utopiops.com", "replicaCount": 1, "ports": [ { "name": "http", "containerPort": 80, "protocol": "TCP" } ], "env": [], "image": { "repository": "nginx", "pullPolicy": "IfNotPresent", "tag": "latest" }, "healthPath": "/", "resource": { "limit": { "cpu": "0.25", "memory": "128Mi" }, "request": { "cpu": "0.15", "memory": "64Mi" } }, "service": { "type": "ClusterIP", "port": 80 } }' http://internal-a6457a92ee5af4bc1bd09e1e62eff0b4-1076518369.us-east-1.elb.amazonaws.com:3000/aws/app/create
+
+# curl -X POST -H 'Content-Type: aaplication/json' -d '{ "appName": "back-job-001", "replicaCount": 1, "env": [], "image": { "repository": "hojjat12/test-image", "pullPolicy": "IfNotPresent", "tag": "0.1.1" }, "healthCommand": [ "ls", "/" ], "resource": { "limit": { "cpu": "0.25", "memory": "128Mi" }, "request": { "cpu": "0.15", "memory": "64Mi" } } }' internal-a6ae8c54468144ce48b181b9d039f595-1014969137.us-east-1.elb.amazonaws.com:3000/aws/back_job/create
+
+# aws lambda invoke --function-name staging-Dockerized-application-78kxrjEl_helm_manager_proxy --cli-binary-format raw-in-base64-out  --payload '{"url": "/aws/app/create", "method": "POST", "body": { "appName": "anyname", "domain": "containers.staging.utopiops.com", "replicaCount": 1, "ports": [ { "name": "http", "containerPort": 80, "protocol": "TCP" } ], "env": [], "image": { "repository": "nginx", "pullPolicy": "IfNotPresent", "tag": "latest" }, "healthPath": "/", "resource": { "limit": { "cpu": "7200m", "memory": "30400Mi" }, "request": { "cpu": "7200m", "memory": "30400Mi" } }, "service": { "type": "ClusterIP", "port": 80 } } }' out --log-type Tail --query 'LogResult' --output text |  base64 -d
+# aws lambda invoke --function-name staging-test-eks9-BfCx2h39_helm_manager_proxy --cli-binary-format raw-in-base64-out  --payload '{"url": "/aws/app/create", "method": "POST", "body": { "appName": "anyname", "domain": "containers.staging.utopiops.com", "replicaCount": 1, "ports": [ { "name": "http", "containerPort": 80, "protocol": "TCP" } ], "env": [], "image": { "repository": "nginx", "pullPolicy": "IfNotPresent", "tag": "latest" }, "healthPath": "/", "resource": { "limit": { "cpu": "7200m", "memory": "30400Mi" }, "request": { "cpu": "7200m", "memory": "30400Mi" } }, "service": { "type": "ClusterIP", "port": 80 } } }' out --log-type Tail --query 'LogResult' --output text |  base64 -d
+# aws lambda invoke --function-name staging-test-eks9-RKysBtpu_helm_manager_proxy --cli-binary-format raw-in-base64-out  --payload '{"url": "/aws/app/delete", "method": "POST", "body": { "appName": "anyname", "domain": "containers.staging.utopiops.com" } }' out --log-type Tail --query 'LogResult' --output text |  base64 -d
+
+# aws lambda invoke --function-name staging-Dockerized-application-78kxrjEl_helm_manager_proxy --cli-binary-format raw-in-base64-out  --payload '{"url": "/aws/back_job/create", "method": "POST", "body": { "appName": "back-job-001", "replicaCount": 1, "env": [], "image": { "repository": "hojjat12/test-image", "pullPolicy": "IfNotPresent", "tag": "0.1.1" }, "healthCommand": [ "ls", "/" ], "resource": { "limit": { "cpu": "0.25", "memory": "128Mi" }, "request": { "cpu": "0.15", "memory": "64Mi" } } } }' out --log-type Tail --query 'LogResult' --output text |  base64 -d

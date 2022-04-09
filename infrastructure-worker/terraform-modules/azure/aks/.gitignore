@@ -1,0 +1,6 @@
+plan
+.terraform/
+.terraform*
+terraform.tfstate*
+backend.conf
+kube_config

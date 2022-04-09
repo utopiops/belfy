@@ -1,0 +1,11 @@
+rbac:
+  create: false
+  pspEnabled: false
+serviceAccount:
+  create: false
+  name: "external-dns"
+provider: "aws"
+policy: "sync"
+sources:
+  - ingress
+  - service

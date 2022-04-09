@@ -1,0 +1,6 @@
+module "{{utilityName}}" {
+  source="{{utilityModulePath}}"
+  {{#each variableValues}}
+  {{variable}}="{{value}}"
+  {{/each}}
+}

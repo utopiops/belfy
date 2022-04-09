@@ -1,0 +1,1 @@
+kubectl --kubeconfig ${kubeconfig} apply -f ${cloudwatch-insights}

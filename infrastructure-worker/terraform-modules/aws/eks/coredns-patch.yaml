@@ -1,0 +1,8 @@
+spec:
+  template:
+    spec:
+      tolerations:
+        - operator: Exists
+          effect: NoExecute
+        - operator: Exists
+          effect: NoSchedule

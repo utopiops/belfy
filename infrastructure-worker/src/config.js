@@ -1,0 +1,25 @@
+const config = {
+    amqpUrl: process.env.AMQP_URL,
+    appName: process.env.APP_NAME,
+    tokenSecret: process.env.TOKEN_SECRET,
+    queueName: process.env.QUEUE_NAME,
+    jobRate: process.env.JOB_RATE,
+    userInfRootPath: process.env.USER_INFRASTRUCTURE_ROOT_PATH,
+    authToken: process.env.AUTH_TOKEN,
+    apiUrl: process.env.API_URL,
+    logstreamManagerUrl: process.env.LOGSTREAM_MANAGER_URL,
+    sentryDsn: process.env.SENTRY_DSN,
+    tfS3Region: process.env.TF_S3_REGION,
+    tfS3Bucket: process.env.TF_S3_BUCKET,
+    providerTfS3Bucket: process.env.PROVIDER_TF_S3_BUCKET,
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    utopiopsProviderRegion: process.env.UTOPIOPS_PROVIDER_REGION,
+    utopiopsProviderBucket: process.env.UTOPIOPS_PROVIDER_BUCKET,
+    utopiopsProviderKmsKeyId: process.env.UTOPIOPS_PROVIDER_KMS_KEY_ID,
+    utopiopsProviderDynamodb: process.env.UTOPIOPS_PROVIDER_DYNAMODB,
+    clientCredentials: process.env.CLIENT_CREDENTIALS,
+    idsPublicUrl: process.env.IDS_PUBLIC_URL,
+}
+
+module.exports = config;

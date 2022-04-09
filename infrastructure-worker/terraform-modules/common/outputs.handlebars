@@ -1,0 +1,6 @@
+{{#each outputs}}
+output "{{{name}}}" {
+    value = "${ module.{{{value}}} }"
+}
+
+{{/each}}

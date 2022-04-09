@@ -1,0 +1,41 @@
+{
+  "name": "infrastructure-worker",
+  "version": "1.0.0",
+  "description": "Worker microservice responsible for infrastructure jobs",
+  "main": "index.js",
+  "repository": "https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/infrastructure-worker",
+  "author": "m.kamrani@hotmail.com",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "nodemon --exec babel-node ./src/index.js",
+    "debug": "nodemon --inspect --exec babel-node ./src/index.js",
+    "build": "babel src —-out-dir dist",
+    "serve": "node dist/index.js"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/preset-env": "^7.3.1",
+    "nodemon": "^1.18.10",
+    "rimraf": "^2.6.3"
+  },
+  "dependencies": {
+    "@sentry/node": "^5.29.0",
+    "@sentry/tracing": "^5.29.0",
+    "amqplib": "^0.5.3",
+    "aws-sdk": "^2.809.0",
+    "axios": "^0.19.0",
+    "dotenv": "^6.2.0",
+    "fs-extra": "^7.0.1",
+    "handlebars": "^4.1.0",
+    "ioredis": "^4.14.0",
+    "lodash": "^4.17.15",
+    "newrelic": "^8.6.0",
+    "tar": "^6.1.8",
+    "uuid": "^3.3.3",
+    "winston": "^3.3.3"
+  }
+}

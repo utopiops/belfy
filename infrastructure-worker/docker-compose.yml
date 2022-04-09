@@ -1,0 +1,21 @@
+version: '3'
+services:
+  infrastructure-worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    command: yarn start
+    ports:
+      - '3021:3000'
+    networks:
+        - default
+
+networks:
+  default:
+    external:
+      name: dev
+volumes:
+  node_modules:

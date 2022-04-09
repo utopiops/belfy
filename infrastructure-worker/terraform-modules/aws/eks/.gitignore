@@ -1,0 +1,5 @@
+plan
+.terraform/
+.terraform*
+terraform.tfstate*
+generated
