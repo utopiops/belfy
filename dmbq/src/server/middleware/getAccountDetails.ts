@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import jwkToPem from 'jwk-to-pem';
 import constants from '../utils/constants';
 import config from '../utils/config';
@@ -31,7 +31,7 @@ async function getAccountDetails(req: Request, res: Response, next: NextFunction
     const jwk = await axios.get(config.jwksUrl!);
     const pem = jwkToPem(jwk.data.keys[0]);
 
-    let decoded;
+    let decoded: JwtPayload | string;
     try {
       decoded = jwt.verify(idToken, pem, { algorithms: ['RS256'] });
     } catch (error) {
@@ -40,6 +40,7 @@ async function getAccountDetails(req: Request, res: Response, next: NextFunction
 
     res.locals.idToken = idToken;
 
+    // @ts-ignore
     res.locals.accountId = new ObjectId(decoded.account_id);
     // @ts-ignore
     res.locals.userId = new ObjectId(decoded.user_id);
