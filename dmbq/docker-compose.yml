@@ -1,0 +1,22 @@
+version: '3'
+services:
+  dbmq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: dbmq
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    command: npm run start_dev
+    networks:
+      - default
+    ports:
+      - '3004:3000'
+
+networks:
+  default:
+    external:
+      name: dev
+volumes:
+  node_modules:
