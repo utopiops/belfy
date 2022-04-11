@@ -1,0 +1,11 @@
+.vscode
+*.out
+.env
+release/
+vendor/
+.env.local
+go.sum775881626.tmp
+redis-data/
+redis.conf/
+esdata/
+.idea
