@@ -1,0 +1,818 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the git integration API Documentation.",
+        "title": "Git Integration API",
+        "contact": {
+            "name": "Utopiops",
+            "url": "http://www.utopiops.com",
+            "email": "contact@utopiops.com"
+        },
+        "license": {
+            "name": "Copyright (C) Utopiops"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/bitbucket/environment/name/:env_name/application/name/:app_Name/commits/recent": {
+            "get": {
+                "description": "get list of recent commits for a specific user's repository",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare commits in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare commits in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "to",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bitbucket/environment/name/:env_name/application/name/:app_Name/pulls/recent": {
+            "get": {
+                "description": "get list of recent pull requests for a specific user's repository",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare pull requests in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare pull requests in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "to",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bitbucket/environment/name/:env_name/application/name/:app_Name/settings": {
+            "put": {
+                "description": "update settings of bitbucket repository in database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "name of user's repository and name of integration in our system",
+                        "name": "settingsDto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bitbucket.settingsDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "store settings of bitbucket repository in database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "name of user's repository and name of integration in our system",
+                        "name": "settingsDto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bitbucket.settingsDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete settings of bitbucket repository from database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            }
+        },
+        "/bitbucket/environment/name/:env_name/application/name/:app_Name/summary": {
+            "get": {
+                "description": "get a summary information about repository (just 3 number about repository)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bitbucket/project": {
+            "get": {
+                "description": "get list of all user's repositories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user integration in our system",
+                        "name": "integration_name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/bitbucket.project"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/github/environment/name/:env_name/application/name/:app_Name/commits/recent": {
+            "get": {
+                "description": "get list of recent commits for a specific user's repository",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare commits in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare commits in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "to",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/github/environment/name/:env_name/application/name/:app_Name/pulls/recent": {
+            "get": {
+                "description": "get list of recent pull requests for a specific user's repository",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare pull requests in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare pull requests in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "to",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/github/environment/name/:env_name/application/name/:app_Name/settings": {
+            "put": {
+                "description": "update settings of github repository in database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "name of user's repository and name of integration in our system",
+                        "name": "settingsDto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.settingsDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "store settings of github repository in database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "name of user's repository and name of integration in our system",
+                        "name": "settingsDto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.settingsDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete settings of github repository from database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            }
+        },
+        "/github/environment/name/:env_name/application/name/:app_Name/summary": {
+            "get": {
+                "description": "get a summary information about repository (just 5 number about repository)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/github/project": {
+            "get": {
+                "description": "get list of all user's repositories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user integration in our system",
+                        "name": "integration_name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github.project"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gitlab/environment/name/:env_name/application/name/:app_Name/commits/recent": {
+            "get": {
+                "description": "get list of recent commits for a specific user's project",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare commits in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare commits in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "to",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gitlab/environment/name/:env_name/application/name/:app_Name/pulls/recent": {
+            "get": {
+                "description": "get list of recent merge requests for a specific user's project",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare merge requests in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "use to declare merge requests in range From and To dates (date format: ISO 8601 format YYYY-MM-DDTHH:MM:SSZ)",
+                        "name": "to",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gitlab/environment/name/:env_name/application/name/:app_Name/settings": {
+            "put": {
+                "description": "update settings of gitlab project in database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "id of user's project and name of integration in our system",
+                        "name": "settingsDto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/gitlab.settingsDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "store settings of gitlab project in database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "id of user's project and name of integration in our system",
+                        "name": "settingsDto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/gitlab.settingsDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete settings of gitlab project from database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            }
+        },
+        "/gitlab/environment/name/:env_name/application/name/:app_Name/summary": {
+            "get": {
+                "description": "get a summary information about project (just 5 number about project)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user environment in our system",
+                        "name": "env_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name of user application in our system",
+                        "name": "app_Name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gitlab/project": {
+            "get": {
+                "description": "get list of all user's projects",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name of user integration in our system",
+                        "name": "integration_name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/gitlab.project"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "bitbucket.project": {
+            "type": "object",
+            "properties": {
+                "full_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "bitbucket.settingsDto": {
+            "type": "object",
+            "properties": {
+                "integrationName": {
+                    "type": "string"
+                },
+                "repoFullName": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.project": {
+            "type": "object",
+            "properties": {
+                "full_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.settingsDto": {
+            "type": "object",
+            "properties": {
+                "integrationName": {
+                    "type": "string"
+                },
+                "repoFullName": {
+                    "type": "string"
+                }
+            }
+        },
+        "gitlab.project": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name_with_namespace": {
+                    "type": "string"
+                }
+            }
+        },
+        "gitlab.settingsDto": {
+            "type": "object",
+            "properties": {
+                "integrationName": {
+                    "type": "string"
+                },
+                "projectId": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
