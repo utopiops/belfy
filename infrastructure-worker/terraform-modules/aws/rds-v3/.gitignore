@@ -1,5 +1,0 @@
-init.tf
-plan
-.terraform/
-.terraform*
-terraform.tfstate*
