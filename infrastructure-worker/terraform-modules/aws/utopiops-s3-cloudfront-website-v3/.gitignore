@@ -1,4 +1,0 @@
-plan
-.terraform/
-.terraform*
-terraform.tfstate*

@@ -1,5 +1,0 @@
-plan
-.terraform/
-.terraform*
-terraform.tfstate*
-backend.conf
