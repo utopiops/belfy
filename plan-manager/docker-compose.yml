@@ -1,0 +1,38 @@
+version: '3'
+services:
+
+  PM:
+    build:
+      context: .
+      args:
+          - GITLAB_ACCESS_USERNAME=$GITLAB_ACCESS_USERNAME
+          - GITLAB_ACCESS_PASSWORD=$GITLAB_ACCESS_PASSWORD
+      dockerfile: Dockerfile.dev
+    hostname: ami-helper
+    volumes:
+      - .:/go/src/gitlab.com/utopiops-water/PM
+    working_dir: /go/src/gitlab.com/utopiops-water/PM
+    command: go run main.go
+    networks:
+        - default
+    ports:
+      - '3017:3000'
+
+  pgdb:
+    image: postgres
+    hostname: pgdb
+    env_file:
+      - postgres.env
+   # volumes:
+    #  - 'pg_data:/var/lib/postgresql/data/'
+    ports:
+      - '5432:5432'
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  default:
+    external:
+      name: dev
