@@ -1,0 +1,38 @@
+{
+  "name": "nightingale",
+  "version": "1.0.0",
+  "description": "A socket.io server that uses a shared bus to synchronise all the instances of the server",
+  "main": "server.js",
+  "scripts": {
+    "start_dev": "nodemon ./server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com-utopiops:utopiops/nightingale.git"
+  },
+  "author": "mohsen@utopiops.com",
+  "license": "ISC",
+  "dependencies": {
+    "@socket.io/redis-adapter": "^7.0.0",
+    "axios": "^0.24.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "express": "4",
+    "express-winston": "^4.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwk-to-pem": "^2.0.5",
+    "jwt-decode": "^3.1.2",
+    "redis": "^3.1.2",
+    "socket.io": "^4.2.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.2",
+    "nodemon": "^2.0.13",
+    "prettier": "2.4.1"
+  }
+}
