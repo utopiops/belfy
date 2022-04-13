@@ -15,6 +15,7 @@ export async function generateIdToken(user: any, internal: boolean = false) {
     account_id: constants.localAccountId,
     user_id: user.id,
     sub: user.username,
+    plan: 'premium',
     ...(!internal ? { ext: { external: true } } : {}),
     exp: Math.floor(Date.now() / 1000 + 3600 * 12), // 12 hours
     iat: Math.floor(Date.now() / 1000),

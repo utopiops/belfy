@@ -12,7 +12,7 @@ services:
     networks:
       - default
     ports:
-      - '3000:3000'
+      - '3018:3000'
 
 networks:
   default:
