@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/utopiops/framework/middlewares"
-	"gitlab.com/utopiops-water/access-manager/config"
-	"gitlab.com/utopiops-water/access-manager/controllers/core"
+	"github.com/utopiops/utopiops/access-manager/config"
+	"github.com/utopiops/utopiops/access-manager/controllers/core"
 )
 
 type App struct {

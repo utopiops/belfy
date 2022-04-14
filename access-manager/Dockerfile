@@ -6,7 +6,7 @@ ARG GITLAB_ACCESS_USERNAME
 ARG GITLAB_ACCESS_PASSWORD
 RUN echo https://${GITLAB_ACCESS_USERNAME}:${GITLAB_ACCESS_PASSWORD}@gitlab.com >> ~/.git-credentials && git config --global credential.helper 'store --file ~/.git-credentials'
 
-WORKDIR /go/src/gitlab.com/utopiops-water/access-manager
+WORKDIR /go/src/github.com/utopiops/utopiops/access-manager
 
 ENV GONOSUMDB=gitlab.com/utopiops-water
 ENV GOPRIVATE=gitlab.com/utopiops-water/*
@@ -24,5 +24,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o access-manager .
 FROM alpine:3.9.5
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
-COPY --from=go-build /go/src/gitlab.com/utopiops-water/access-manager .
+COPY --from=go-build /go/src/github.com/utopiops/utopiops/access-manager .
 ENTRYPOINT ["./access-manager"]

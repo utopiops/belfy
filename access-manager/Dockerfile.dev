@@ -5,7 +5,7 @@ ENV GO111MODULE=on
 ARG GITLAB_ACCESS_USERNAME
 ARG GITLAB_ACCESS_PASSWORD
 
-WORKDIR /go/src/gitlab.com/utopiops-water/access-manager
+WORKDIR /go/src/github.com/utopiops/utopiops/access-manager
 ENV GONOSUMDB=gitlab.com/utopiops-water
 ENV GOPRIVATE=gitlab.com/utopiops-water/*
 RUN echo https://${GITLAB_ACCESS_USERNAME}:${GITLAB_ACCESS_PASSWORD}@gitlab.com >> ~/.git-credentials && git config --global credential.helper 'store --file ~/.git-credentials'

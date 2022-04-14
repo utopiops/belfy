@@ -6,7 +6,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"gitlab.com/utopiops-water/access-manager/db/migrate/postgresql"
+	"github.com/utopiops/utopiops/access-manager/db/migrate/postgresql"
 )
 
 // Driver defines the database driver.

@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
-	"gitlab.com/utopiops-water/access-manager/app"
-	"gitlab.com/utopiops-water/access-manager/config"
+	"github.com/utopiops/utopiops/access-manager/app"
+	"github.com/utopiops/utopiops/access-manager/config"
 )
 
 func init() {
