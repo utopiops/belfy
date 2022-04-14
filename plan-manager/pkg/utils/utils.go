@@ -3,7 +3,7 @@ package utils
 import (
 	"fmt"
 
-	"gitlab.com/utopiops-water/plan-manager/config"
+	"github.com/utopiops/utopiops/plan-manager/config"
 )
 
 func DbConnStr() (string, string) {

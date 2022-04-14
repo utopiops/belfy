@@ -2,21 +2,19 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.com/utopiops-water/framework/middlewares"
-	"gitlab.com/utopiops-water/plan-manager/config"
-	"gitlab.com/utopiops-water/plan-manager/controllers/healthcheck"
-	"gitlab.com/utopiops-water/plan-manager/controllers/paymentController"
-	"gitlab.com/utopiops-water/plan-manager/controllers/planController"
-	"gitlab.com/utopiops-water/plan-manager/controllers/usageController"
+	"github.com/utopiops/framework/middlewares"
+	"github.com/utopiops/utopiops/plan-manager/config"
+	"github.com/utopiops/utopiops/plan-manager/controllers/healthcheck"
+	"github.com/utopiops/utopiops/plan-manager/controllers/usageController"
 )
 
 type App struct {
 	r *gin.Engine
 }
 
-func New(healthcheck *healthcheck.HealthCheck, planController *planController.PlanController, usageController *usageController.UsageController, paymentController *paymentController.PaymentController) *App {
+func New(healthcheck *healthcheck.HealthCheck, usageController *usageController.UsageController) *App {
 	r := gin.Default()
-	routing(r, healthcheck, planController, usageController, paymentController)
+	routing(r, healthcheck, usageController)
 	return &App{
 		r: r,
 	}
@@ -26,7 +24,7 @@ func (a *App) Start(addr ...string) error {
 	return a.r.Run(addr...)
 }
 
-func routing(r *gin.Engine, healthcheck *healthcheck.HealthCheck, planController *planController.PlanController, usageController *usageController.UsageController, paymentController *paymentController.PaymentController) {
+func routing(r *gin.Engine, healthcheck *healthcheck.HealthCheck, usageController *usageController.UsageController) {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.Use(middlewares.CORSMiddleware(config.Configs.App.AllowedOrigins))

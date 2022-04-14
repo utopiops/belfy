@@ -10,8 +10,8 @@ services:
       dockerfile: Dockerfile.dev
     hostname: ami-helper
     volumes:
-      - .:/go/src/gitlab.com/utopiops-water/PM
-    working_dir: /go/src/gitlab.com/utopiops-water/PM
+      - .:/go/src/github.com/utopiops/utopiops/plan-manager/PM
+    working_dir: /go/src/github.com/utopiops/utopiops/plan-manager/PM
     command: go run main.go
     networks:
         - default

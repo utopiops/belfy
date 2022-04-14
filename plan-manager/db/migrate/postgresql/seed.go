@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"gitlab.com/utopiops-water/plan-manager/models"
+	"github.com/utopiops/utopiops/plan-manager/models"
 )
 
 var fee = 1

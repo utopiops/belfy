@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"gitlab.com/utopiops-water/plan-manager/models"
+	"github.com/utopiops/utopiops/plan-manager/models"
 )
 
 type UsageController struct {

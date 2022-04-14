@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/utopiops-water/plan-manager.git
+git remote add origin https://github.com/utopiops/utopiops/plan-manager.git
 git branch -M master
 git push -uf origin master
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.com/-/experiment/new_project_readme_content:08528b7452b54a56c886e61f90a2c6f3?https://gitlab.com/utopiops-water/plan-manager/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.com/-/experiment/new_project_readme_content:08528b7452b54a56c886e61f90a2c6f3?https://github.com/utopiops/utopiops/plan-manager/-/settings/integrations)
 
 ## Collaborate with your team
 
