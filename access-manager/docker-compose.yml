@@ -1,0 +1,38 @@
+version: '3'
+services:
+  pgdb:
+    image: postgres
+    hostname: pgdb
+    env_file:
+      - postgres.env
+    volumes:
+      - 'pg_data:/var/lib/postgresql/data/'
+    ports:
+      - '5432:5432'
+    restart: unless-stopped
+  access-manager:
+    build:
+      context: .
+      args:
+          - GITLAB_ACCESS_USERNAME=$GITLAB_ACCESS_USERNAME
+          - GITLAB_ACCESS_PASSWORD=$GITLAB_ACCESS_PASSWORD
+      dockerfile: Dockerfile.dev
+    hostname: access-manager
+    volumes:
+      - .:/go/src/github.com/utopiops/utopiops/access-manager
+    working_dir: /go/src/github.com/utopiops/utopiops/access-manager
+    command: go run main.go
+    networks:
+        - default
+    ports:
+      - '3011:3000'
+    depends_on:
+      - pgdb
+
+volumes:
+  pg_data:
+
+networks:
+  default:
+    external:
+      name: dev
