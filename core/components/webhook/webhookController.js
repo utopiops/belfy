@@ -50,6 +50,7 @@ async function receiveGithubWebhook(req, res) {
         try {
           const params = {
             jobName,
+            isParameterized: false,
           };
           await http.post(`${config.ciHelperUrl}/job/build`, params, httpConfig);
           
@@ -71,6 +72,11 @@ async function receiveGithubWebhook(req, res) {
         if (!appVersionResult.success) {
           continue;
         }
+
+        const params = {
+          isParameterized: true
+        };
+
         var branch = appVersionResult.outputs.branch;
         if (isDynamicApplication) {
           const dynamicName = ref.replace(/^refs\/heads\//, '');
@@ -78,6 +84,8 @@ async function receiveGithubWebhook(req, res) {
           if (index != -1) {
             branch = dynamicName;
             jobName = dynamicNames[index].jobName;
+
+            params.isParameterized = false;
           }
         }
 
@@ -93,9 +101,11 @@ async function receiveGithubWebhook(req, res) {
 
         // Try to trigger a job (when an error occurred trying to trigger another job)
         try {
-          const params = {
-            jobName,
-          };
+          params.jobName = jobName;
+          if (params.isParameterized) {
+            params.branch = branch;
+          }
+
           await http.post(`${config.ciHelperUrl}/job/build`, params, httpConfig);
           
           await sleep(3000);
@@ -272,6 +282,7 @@ async function receiveGitlabWebhook(req, res) {
         try {
           const params = {
             jobName,
+            isParameterized: false,
           };
           await http.post(`${config.ciHelperUrl}/job/build`, params, httpConfig);
           
@@ -294,6 +305,10 @@ async function receiveGitlabWebhook(req, res) {
           continue;
         }
         var branch = appVersionResult.outputs.branch;
+
+        const params = {
+          isParameterized: true
+        }
 
         if (isDynamicApplication) {
           const dynamicName = ref.replace(/^refs\/heads\//, '');
@@ -361,6 +376,7 @@ async function receiveGitlabWebhook(req, res) {
             if (index != -1) {
               branch = dynamicName;
               jobName = dynamicNames[index].jobName;
+              params.isParameterized = false;
             }
           }
         }
@@ -377,9 +393,10 @@ async function receiveGitlabWebhook(req, res) {
 
         // Try to trigger a job (when an error occurred trying to trigger another job)
         try {
-          const params = {
-            jobName,
-          };
+          params.jobName = jobName;
+          if (params.isParameterized) {
+            params.branch = branch;
+          }
           await http.post(`${config.ciHelperUrl}/job/build`, params, httpConfig);
           
           await sleep(3000);
