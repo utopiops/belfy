@@ -1,0 +1,10 @@
+module "vpc" {
+  source                = "./vpc"
+  vpc_name              = {{{data.vpcName}}}
+  vpc_network_cidr      = {{{data.vpcNetworkCidr}}}
+  azs                   = {{{data.azs}}}
+  public_subnets        = {{{data.public_subnets}}}
+  private_subnets       = {{{data.private_subnets}}}
+  environment           = {{{data.environment}}}
+  tag_name              = {{{data.tagName}}}
+}

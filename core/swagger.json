@@ -1,0 +1,575 @@
+{
+  "info": {
+    "title": "Core API",
+    "version": "1.0.0",
+    "description": "This is the core API Documentation.",
+    "license": {
+      "name": "Copyright (C) Utopiops"
+    },
+    "contact": {
+      "name": "Utopiops",
+      "email": "contact@utopiops.com",
+      "url": "https://www.utopiops.com"
+    }
+  },
+  "swagger": "2.0",
+  "paths": {
+    "/v2/applications/deployment/application": {
+      "get": {
+        "description": "List all application deployments",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v2/applications/deployment/application/summary": {
+      "get": {
+        "description": "List all application deployments by date",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/deployment/application": {
+      "get": {
+        "description": "List all application deployments",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/deployment/application/summary": {
+      "get": {
+        "description": "List all application deployments by date",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/deployment/environment/name/:environmentName/application/name/:applicationName": {
+      "get": {
+        "description": "Get Applications Latest Deployment",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/deployment/environment/name/:environmentName/application": {
+      "get": {
+        "description": "list all Applications for an specific environment",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/application": {
+      "get": {
+        "description": "list all Applications",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/name/:applicationName/activate": {
+      "post": {
+        "description": "Activate a version of application",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/name/:applicationName": {
+      "delete": {
+        "description": "Delete application",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/name/:applicationName/tf": {
+      "get": {
+        "description": "Get the tf suitable detail of the application",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/name/:applicationName/versions": {
+      "get": {
+        "description": "List the versions of the application",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/name/:applicationName/dry-run": {
+      "post": {
+        "description": "Dry-run application",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/name/:applicationName/deploy": {
+      "post": {
+        "description": "Deploy application",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/name/:applicationName/destroy": {
+      "post": {
+        "description": "Destroy application",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/name/:applicationName/state": {
+      "post": {
+        "description": "Set application state",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/name/:applicationName/resources": {
+      "get": {
+        "description": "Get the actual resources for application deployed on the Cloud",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/ecs": {
+      "post": {
+        "description": "Create an ECS application",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/ecs/version/:version": {
+      "post": {
+        "description": "Create an ECS application version",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      },
+      "put": {
+        "description": "edit an S3 website application version",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/s3web": {
+      "post": {
+        "description": "Create an S3 website application",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/s3web/version/:version": {
+      "post": {
+        "description": "Create an S3 website application version",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/classic-baked": {
+      "post": {
+        "description": "Create a classic baked application",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/applications/environment/name/:environmentName/application/classic-baked/version/:version": {
+      "post": {
+        "description": "Create a classic baked application version",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      },
+      "put": {
+        "description": "edit an classic baked application version",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v3/environment": {
+      "post": {
+        "description": "Create environment",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v2/ssl_tls/": {
+      "get": {
+        "description": "Retrieves the list of certificates",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v2/ssl_tls/environment/name/:environmentName/certificate/identifier/:certificateIdentifier": {
+      "get": {
+        "description": "Retrieves the versions of a certificate",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes a certificate",
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v2/ssl_tls/environment/name/:environmentName/certificate/identifier/:certificateIdentifier/version/:version": {
+      "get": {
+        "description": "Retrieves the details of a certificate",
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v2/ssl_tls/environment/name/:environmentName/certificate/identifier/:certificateIdentifier/version/:version/activate": {
+      "post": {
+        "description": "Activates a version of certificate",
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v2/ssl_tls/environment/name/:environmentName/certificate/identifier/:certificateIdentifier/deploy": {
+      "post": {
+        "description": "Deploys the active version of a certificate",
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v2/ssl_tls/environment/name/:environmentName/certificate/identifier/:certificateIdentifier/destroy": {
+      "post": {
+        "description": "Destroys the active version of a certificate",
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      },
+      "patch": {
+        "description": "Sets the state of the certificate (after deploy or destroy)",
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v2/ssl_tls/environment": {
+      "get": {
+        "description": "Retrieves the list of environments that support SSL/TLS certificate (from our pov)",
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v2/ssl_tls/environment/name/:environmentName/certificate": {
+      "post": {
+        "description": "Creates a certificate",
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/v2/ssl_tls/environment/name/:environmentName/certificate/:certificateIdentifier/version/:version": {
+      "post": {
+        "description": "Creates a certificate version",
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      },
+      "put": {
+        "description": "Edit a certificate version",
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {},
+  "responses": {},
+  "parameters": {},
+  "securityDefinitions": {},
+  "tags": []
+}
