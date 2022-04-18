@@ -37,7 +37,7 @@ function setExposedPorts(app: any, legitimateAlb: any) {
 async function jobPromise(
   details: any,
   environmentName: string,
-  environmentId: string,
+  environmentId: any,
   app: any,
   legitimateAlb: any,
   legitimateCluster: any,

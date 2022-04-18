@@ -2,7 +2,7 @@ import Job from '../Job';
 import config from '../../utils/config';
 import { s3Application as defaults } from './defaults';
 
-async function jobPromise(details: any, environmentName: string, environmentId: string, app: any): Promise<object> {
+async function jobPromise(details: any, environmentName: string, environmentId: any, app: any): Promise<object> {
   return new Job({
     type: 'create',
     description: 'static-website application creation',

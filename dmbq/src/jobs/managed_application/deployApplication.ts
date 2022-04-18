@@ -4,7 +4,7 @@ import config from '../../utils/config';
 async function jobPromise(
   details: any,
   environmentName: string,
-  environmentId: string,
+  environmentId: any,
   applicationName: string,
   version: number,
 ): Promise<object> {

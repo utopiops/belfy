@@ -9,7 +9,7 @@ export async function getEnvironmentId(accountId: string, environmentName: any) 
   return mongoose.connection.db
     .collection('environment_v2')
     .findOne({ accountId: new ObjectId(accountId), name: environmentName }, { projection: { _id: 1 } })
-    .then((result) => result?._id);
+    .then((result) => result!._id);
 }
 
 export async function getProviderId(accountId: string, providerName: any) {
