@@ -4,10 +4,10 @@ import handleRequest from '../handler';
 import config from '../../utils/config';
 
 // jobs
-import destroyFmApp from '../../jobs/fm_static_website/destroyFmApp';
-import deleteFmApp from '../../jobs/fm_static_website/deleteFmApp';
+import createAndDeployFmStatic from '../../jobs/fm_static_website/createAndDeployFmStatic';
+import createFmPipeline from '../../jobs/fm_static_website/createFmPipeline';
 
-async function remove(req: Request, res: Response) {
+async function setup(req: Request, res: Response) {
   // TODO: add validation
   const handle = async (
     queueName: string,
@@ -18,22 +18,23 @@ async function remove(req: Request, res: Response) {
       const flowProducer = new FlowProducer({ connection: config.redisConnection });
 
       const flow = await flowProducer.add({
-        name: 'fm static website remove',
+        name: 'fm static website setup',
         data: {
           isParentJob: true,
-          name: 'fm static website remove',
+          name: 'fm static website setup',
+          isChildJob: false,
           details: res.locals,
         },
         queueName,
         children: [
-          { name: 'create fm static website', data: await destroyFmApp(res.locals, body.name), queueName },
-          { name: 'deploy fm static website', data: await deleteFmApp(res.locals, body.name), queueName },
+          { name: 'create fm static website', data: await createAndDeployFmStatic(res.locals, body), queueName },
+          { name: 'deploy fm static website', data: await createFmPipeline(res.locals, body.name), queueName },
         ],
       });
 
       return { flow };
     } catch (err: any) {
-      console.log('error in fm static website remove:', err);
+      console.log('error in fm static website setup:', err);
       return {
         error: {
           message: err.message,
@@ -45,4 +46,4 @@ async function remove(req: Request, res: Response) {
   await handleRequest({ req, res, handle });
 }
 
-export default remove;
+export default setup;

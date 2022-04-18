@@ -1,4 +1,3 @@
-/* eslint-disable object-curly-newline */
 import { FlowProducer, JobNode } from 'bullmq';
 import { Request, Response } from 'express';
 import handleRequest from '../handler';
@@ -26,44 +25,56 @@ async function setup(req: Request, res: Response): Promise<any> {
 
       const flowProducer = new FlowProducer({ connection: config.redisConnection });
 
+      const children = [];
+
       res.locals.isChildJob = true; // todo: rename to childJobCall || internalCall || ...
 
-      const certificateParentJob = await handleCertificate(req, res, queueName, {
+      await handleCertificate(req, res, queueName, {
         environmentName: body.environmentName,
         environmentId,
       });
 
+      children.push(
+        {
+          name: 'create s3-website',
+          data: await createS3Website(res.locals, body.environmentName, environmentId, body),
+          queueName,
+        },
+        {
+          name: 'activate Application',
+          data: await activateApplication(res.locals, body.environmentName, environmentId, body.name, 's3_website', 1),
+          queueName,
+        },
+        {
+          name: 'deploy Application',
+          data: await deployApplication(res.locals, body.environmentName, environmentId, body.name, 1),
+          queueName,
+        },
+      );
+
+      if (body.integrationName) {
+        children.push({
+          name: 'create Pipeline',
+          data: await createPipeline(res.locals, body.environmentName, body.name, 's3_website'),
+          queueName,
+        });
+      }
+
       const flow = await flowProducer.add({
-        name: 'ecs setup',
+        name: 's3-website setup',
         queueName,
-        children: [
-          certificateParentJob,
-          {
-            name: 'create ecs',
-            data: await createS3Website(res.locals, body.environmentName, environmentId, body),
-            queueName,
-          },
-          {
-            name: 'activate Application',
-            data: await activateApplication(res.locals, body.environmentName, environmentId, body.name, 's3_website', 1),
-            queueName,
-          },
-          {
-            name: 'deploy Application',
-            data: await deployApplication(res.locals, body.environmentName, environmentId, body.name, 1),
-            queueName,
-          },
-          {
-            name: 'create Pipeline', // todo: check for git integration
-            data: await createPipeline(res.locals, body.environmentName, body.name, 's3_website'),
-            queueName,
-          },
-        ],
+        data: {
+          isParentJob: true,
+          name: 's3-website setup',
+          isChildJob: false,
+          details: res.locals,
+        },
+        children,
       });
 
       return { flow };
     } catch (err: any) {
-      console.log('error in ecs setup:', err);
+      console.log('error in s3 setup:', err);
       return {
         error: {
           message: err.message,
@@ -71,8 +82,6 @@ async function setup(req: Request, res: Response): Promise<any> {
       };
     }
   };
-
-  // if (res.locals.internalUse) return handle;
 
   await handleRequest({ req, res, handle });
 }

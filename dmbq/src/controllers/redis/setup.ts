@@ -4,10 +4,9 @@ import handleRequest from '../handler';
 import config from '../../utils/config';
 
 // jobs
-import createDatabase from '../../jobs/database/createDatabase';
-import activateDatabase from '../../jobs/database/activateDatabase';
-import deployDatabase from '../../jobs/database/deployDatabase';
-import setRdstSettings from '../../jobs/database/setRdstSettings';
+import CreateRedis from '../../jobs/redis/CreateRedis'; // ! upper case CreateRedis needs to be changed
+import activateRedis from '../../jobs/redis/activateRedis';
+import deployRedis from '../../jobs/redis/deployRedis';
 
 async function setup(req: Request, res: Response) {
   // TODO: add validation
@@ -16,28 +15,27 @@ async function setup(req: Request, res: Response) {
     // ? maybe there is a better way to specify this type expression
   ): Promise<{ flow?: JobNode; error?: { message: string; statusCode?: number } }> => {
     try {
-      const { body } = req;
       const flowProducer = new FlowProducer({ connection: config.redisConnection });
 
       const flow = await flowProducer.add({
-        name: 'database setup',
+        name: 'redis setup',
         data: {
           isParentJob: true,
-          name: 'database setup',
+          name: 'redis setup',
+          isChildJob: false,
           details: res.locals,
         },
         queueName,
         children: [
-          { name: 'create database', data: await createDatabase(res.locals, body), queueName },
-          { name: 'activate database', data: await activateDatabase(res.locals, body.environmentName, body.name, 1), queueName },
-          { name: 'deploy database', data: await deployDatabase(res.locals, body.environmentName, body.name, 1), queueName },
-          { name: 'deploy database', data: await setRdstSettings(res.locals, body.environmentName, body.name), queueName },
+          { name: 'create redis', data: await CreateRedis(req.body, res.locals), queueName },
+          { name: 'activate redis', data: await activateRedis(req.body, res.locals), queueName },
+          { name: 'deploy redis', data: await deployRedis(req.body, res.locals), queueName },
         ],
       });
 
       return { flow };
     } catch (err: any) {
-      console.log('error in database:', err);
+      console.log('error in static website setup:', err);
       return {
         error: {
           message: err.message,

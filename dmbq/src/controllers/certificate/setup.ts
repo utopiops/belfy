@@ -18,7 +18,6 @@ async function setup(req: Request, res: Response): Promise<any> {
   ): Promise<{ flow?: JobNode; error?: { message: string; statusCode?: number } }> => {
     try {
       const { body } = res.locals.isChildJob ? dataBag : req;
-      console.log('🚀 ~ file: setup.ts ~ line 21 ~ setup ~ body', body);
       const flowProducer = new FlowProducer({ connection: config.redisConnection });
 
       const flow = await flowProducer.add({
@@ -26,7 +25,7 @@ async function setup(req: Request, res: Response): Promise<any> {
         data: {
           isParentJob: true,
           name: 'certificate setup',
-          isChildJob: res.locals.isChildJob,
+          isChildJob: !!res.locals.isChildJob,
           details: res.locals,
         },
         queueName,

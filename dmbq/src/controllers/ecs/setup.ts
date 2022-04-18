@@ -37,7 +37,7 @@ async function setup(req: Request, res: Response): Promise<any> {
 
       const flowProducer = new FlowProducer({ connection: config.redisConnection });
 
-      res.locals.isChildJob = true; // todo: rename to childJobCall || internalCall || ...
+      res.locals.isChildJob = true;
 
       await handleCertificate(req, res, queueName, {
         environmentName: body.environmentName,
@@ -87,7 +87,7 @@ async function setup(req: Request, res: Response): Promise<any> {
 
       if (body.integrationName) {
         children.push({
-          name: 'create Pipeline', // todo: check for git integration
+          name: 'create Pipeline',
           data: await createPipeline(res.locals, body.environmentName, body.name, 'ecs'),
           queueName,
         });
@@ -96,6 +96,12 @@ async function setup(req: Request, res: Response): Promise<any> {
       const flow = await flowProducer.add({
         name: 'ecs setup',
         queueName,
+        data: {
+          isParentJob: true,
+          name: 'ecs setup',
+          isChildJob: false,
+          details: res.locals,
+        },
         children,
       });
 

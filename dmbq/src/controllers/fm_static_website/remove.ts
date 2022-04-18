@@ -1,12 +1,11 @@
-// TODO: this file structure is 90% repetitive, maybe we can extract this into a separate file and use it in all the controllers
 import { FlowProducer, JobNode } from 'bullmq';
 import { Request, Response } from 'express';
 import handleRequest from '../handler';
 import config from '../../utils/config';
 
 // jobs
-import destroyDomain from '../../jobs/domain/destroyDomain';
-import deleteDomain from '../../jobs/domain/deleteDomain';
+import destroyFmApp from '../../jobs/fm_static_website/destroyFmApp';
+import deleteFmApp from '../../jobs/fm_static_website/deleteFmApp';
 
 async function remove(req: Request, res: Response) {
   // TODO: add validation
@@ -19,22 +18,23 @@ async function remove(req: Request, res: Response) {
       const flowProducer = new FlowProducer({ connection: config.redisConnection });
 
       const flow = await flowProducer.add({
-        name: 'domain remove',
+        name: 'fm static website remove',
         data: {
           isParentJob: true,
-          name: 'domain remove',
+          name: 'fm static website remove',
+          isChildJob: false,
           details: res.locals,
         },
         queueName,
         children: [
-          { name: 'create domain', data: await destroyDomain(res.locals, body.domainName), queueName },
-          { name: 'deploy domain', data: await deleteDomain(res.locals, body.domainName), queueName },
+          { name: 'create fm static website', data: await destroyFmApp(res.locals, body.name), queueName },
+          { name: 'deploy fm static website', data: await deleteFmApp(res.locals, body.name), queueName },
         ],
       });
 
       return { flow };
     } catch (err: any) {
-      console.log('error in domain remove:', err);
+      console.log('error in fm static website remove:', err);
       return {
         error: {
           message: err.message,

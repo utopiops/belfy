@@ -4,22 +4,18 @@
 
 import mongoose from 'mongoose';
 import axios from 'axios';
-import config from '../server/utils/config'; // todo: importing from server doesn't make sense.
-import certificateDefaults from '../server/jobs/certificate/defaults'; // todo: importing from server doesn't make sense.
+import config from '../utils/config';
+import certificateDefaults from '../jobs/certificate/defaults';
 
 const { ObjectId } = mongoose.Types;
 
 // todo: update type definitions
 
 async function getEnvironmentDns(accountId: string, environmentName: any) {
-  return (
-    mongoose.connection.db
-      .collection('environment_v2')
-      // @ts-ignore
-      .findOne({ accountId: new ObjectId(accountId), name: environmentName }, { domain: 1 })
-      // @ts-ignore
-      .then((result) => result.domain.dns)
-  );
+  return mongoose.connection.db
+    .collection('environment_v2')
+    .findOne({ accountId: new ObjectId(accountId), name: environmentName }, { projection: { domain: 1 } })
+    .then((result) => result?.domain.dns);
 }
 
 export async function setCertificateIdentifier(job: any) {
@@ -63,7 +59,7 @@ export async function setCertificateArn(job: any) {
     method: 'get',
     url: `${config.coreUrl}/v2/inf/aws/acm/listCertificatesByEnvironmentName/${environmentName}`,
     params: {
-      region: job.description === 'static-website application creation' ? certificateDefaults.region : undefined, // todo: make it nicer
+      region: job.description === 'static-website application creation' ? certificateDefaults.region : undefined,
     },
     headers: job.details.headers,
   });

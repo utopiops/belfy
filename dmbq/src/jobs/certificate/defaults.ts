@@ -1,4 +1,3 @@
-/* eslint-disable object-curly-newline */ // todo: remove all eslint-disables
 const certificate = {
   domainName: '*',
   subjectAlternativeNames: [],

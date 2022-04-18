@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import { Queue, JobNode, QueueEvents } from 'bullmq';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
-import generateWorker from '../../worker/generateWorker';
+import generateWorker from '../worker/generateWorker';
 import { initiateJob } from './helpers';
 import constants from '../utils/constants';
 import config from '../utils/config';
@@ -28,6 +28,7 @@ async function handleRequest({
   }
   try {
     // init
+    // todo: handle job configs
     const tempJobConfig = constants.jobConfigs.flashSetup;
     const jobId = await initiateJob(
       tempJobConfig,
@@ -42,7 +43,6 @@ async function handleRequest({
     const queueAdaptor = new BullMQAdapter(queue);
     req.app.locals.addQueue(queueAdaptor);
 
-    // todo: handle job configs
     res.status(constants.statusCodes.accepted).send({ jobId });
 
     // generate worker

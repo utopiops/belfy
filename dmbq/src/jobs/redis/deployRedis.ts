@@ -2,8 +2,6 @@ import Job from '../Job';
 import config from '../../utils/config';
 import { getEnvironmentId } from './helpers';
 
-// todo: decide between camelCase and snake_case. make it consistent.
-
 async function jobPromise(body: any, details: any): Promise<object> {
   return new Job({
     type: 'deploy',
@@ -20,7 +18,6 @@ async function jobPromise(body: any, details: any): Promise<object> {
       deployedVersion: 1,
       'state.code': 'deployed',
     },
-    // todo: its a dumb solution tbh, get rid of it.
     details: {
       headers: details.headers,
       jobId: details.jobId,

@@ -14,7 +14,6 @@ import config from './utils/config';
 
 const mainQueue = new Queue('main', { connection: config.redisConnection });
 
-// require('./db');
 // ----ui----
 const serverAdapter = new ExpressAdapter();
 

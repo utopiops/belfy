@@ -35,7 +35,7 @@ async function jobPromise(details: any, body: any): Promise<object> {
     collection: 'database_server_v2',
     filter: {
       name: body.name,
-      environment: await getEnvironmentId(details.accountId, body.environmentName), // todo: move this to somewhere more accessible
+      environment: await getEnvironmentId(details.accountId, body.environmentName),
     },
     details: {
       headers: details.headers,

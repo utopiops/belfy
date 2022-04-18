@@ -4,12 +4,17 @@
 import axios from 'axios';
 import mongoose from 'mongoose';
 import c from 'ansi-colors';
-import config from '../server/utils/config'; // ! importing from server doesn't make sense.
+import config from '../utils/config';
 import { setCertificateIdentifier, setProviderId, setCertificateArn } from './helperFunctions';
 
 const { ObjectId } = mongoose.Types;
 
 async function fillerFunction(job: any) {
+  // ObjectId wont get serialized to redis, so we have to do this.
+  if (job.filter.environment) job.filter.environment = new ObjectId(job.filter.environment);
+  if (job.filter.domainId) job.filter.domainId = new ObjectId(job.filter.domainId);
+  if (job.filter.accountId) job.filter.accountId = new ObjectId(job.filter.accountId);
+
   switch (job.description) {
     case 'certificate activation':
     case 'certificate deployment':
@@ -31,8 +36,7 @@ async function fillerFunction(job: any) {
 // note: make this function handle log structure and colors all by it self.
 // todo: add emojis to log
 async function sendLog(details: any, log: string, isLastLine: boolean = false, sameLine: boolean = false) {
-  console.log('🚀 ~ file: jobHandler.ts ~ line 34 ~ sendLog ~ log', log);
-  console.log('🚀 ~ file: jobHandler.ts ~ line 34 ~ sendLog ~ isLastLine', isLastLine);
+  console.log('sendLog ~ log:', log, 'isLastLine:', isLastLine);
   try {
     axios({
       method: 'post',
@@ -77,13 +81,11 @@ async function waitForAction(job: any) {
         );
         // @ts-ignore
         let code = doc?.state.code;
-        console.log('🚀 ~ file: jobHandler.ts ~ line 80 ~ interval ~ doc', doc);
         if (job.details.isDynamic) {
           // @ts-ignore
           const index = doc.dynamicNames.findIndex(
             (dynamicName: { name: any }) => dynamicName.name === job.body.variables.dynamicName,
           );
-          console.log('🚀 ~ file: jobHandler.ts ~ line 85 ~ interval ~ index', index);
           // @ts-ignore
           code = doc?.dynamicNames[index].state.code;
         }
@@ -106,18 +108,11 @@ async function waitForAction(job: any) {
 
 async function handleJob(job: any) {
   await fillerFunction(job);
-  console.log('🚀 after factory job:', job);
+  console.log('handling job:', job);
   if (job.filter) {
-    // ! start temporary dumb code:
-    if (job.filter.environment) job.filter.environment = new ObjectId(job.filter.environment); // todo: this is dumb, fix it.
-    if (job.filter.domainId) job.filter.domainId = new ObjectId(job.filter.domainId); // todo: this is dumb, fix it.
-    if (job.filter.accountId) job.filter.accountId = new ObjectId(job.filter.accountId); // todo: this is dumb, fix it.
-    // ! end temporary dumb code
-
     const doc = await mongoose.connection.db.collection(job.collection).findOne(job.filter);
     // @ts-ignore
     if (doc) {
-      console.log('🚀 ~ file: helpers.ts ~ line 87 ~ handleJob ~ doc skipped');
       sendLog(job.details, `${c.cyan(job.details.name)} - ${job.description} skipped. it's already done.`);
       return {
         success: true,

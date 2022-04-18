@@ -4,8 +4,8 @@ import handleRequest from '../handler';
 import config from '../../utils/config';
 
 // jobs
-import createAndDeployFmStatic from '../../jobs/fm_static_website/createAndDeployFmStatic';
-import createFmPipeline from '../../jobs/fm_static_website/createFmPipeline';
+import createDomain from '../../jobs/domain/createDomain';
+import deployDomain from '../../jobs/domain/deployDomain';
 
 async function setup(req: Request, res: Response) {
   // TODO: add validation
@@ -18,22 +18,23 @@ async function setup(req: Request, res: Response) {
       const flowProducer = new FlowProducer({ connection: config.redisConnection });
 
       const flow = await flowProducer.add({
-        name: 'fm static website setup',
+        name: 'domain setup',
         data: {
           isParentJob: true,
-          name: 'fm static website setup',
+          name: 'domain setup',
+          isChildJob: false,
           details: res.locals,
         },
         queueName,
         children: [
-          { name: 'create fm static website', data: await createAndDeployFmStatic(res.locals, body), queueName },
-          { name: 'deploy fm static website', data: await createFmPipeline(res.locals, body.name), queueName },
+          { name: 'create domain', data: await createDomain(res.locals, body.domainName), queueName },
+          { name: 'deploy domain', data: await deployDomain(res.locals, body.domainName), queueName },
         ],
       });
 
       return { flow };
     } catch (err: any) {
-      console.log('error in fm static website setup:', err);
+      console.log('error in domain setup:', err);
       return {
         error: {
           message: err.message,

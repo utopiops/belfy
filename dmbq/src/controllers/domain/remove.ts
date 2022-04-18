@@ -1,13 +1,14 @@
+// TODO: this file structure is 90% repetitive, maybe we can extract this into a separate file and use it in all the controllers
 import { FlowProducer, JobNode } from 'bullmq';
 import { Request, Response } from 'express';
 import handleRequest from '../handler';
 import config from '../../utils/config';
 
 // jobs
-import createDomain from '../../jobs/domain/createDomain';
-import deployDomain from '../../jobs/domain/deployDomain';
+import destroyDomain from '../../jobs/domain/destroyDomain';
+import deleteDomain from '../../jobs/domain/deleteDomain';
 
-async function setup(req: Request, res: Response) {
+async function remove(req: Request, res: Response) {
   // TODO: add validation
   const handle = async (
     queueName: string,
@@ -18,22 +19,23 @@ async function setup(req: Request, res: Response) {
       const flowProducer = new FlowProducer({ connection: config.redisConnection });
 
       const flow = await flowProducer.add({
-        name: 'domain setup',
+        name: 'domain remove',
         data: {
           isParentJob: true,
-          name: 'domain setup',
+          name: 'domain remove',
+          isChildJob: false,
           details: res.locals,
         },
         queueName,
         children: [
-          { name: 'create domain', data: await createDomain(res.locals, body.domainName), queueName },
-          { name: 'deploy domain', data: await deployDomain(res.locals, body.domainName), queueName },
+          { name: 'create domain', data: await destroyDomain(res.locals, body.domainName), queueName },
+          { name: 'deploy domain', data: await deleteDomain(res.locals, body.domainName), queueName },
         ],
       });
 
       return { flow };
     } catch (err: any) {
-      console.log('error in domain setup:', err);
+      console.log('error in domain remove:', err);
       return {
         error: {
           message: err.message,
@@ -45,4 +47,4 @@ async function setup(req: Request, res: Response) {
   await handleRequest({ req, res, handle });
 }
 
-export default setup;
+export default remove;
