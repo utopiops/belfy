@@ -28,11 +28,11 @@ https://discord.gg/KStCByYNJG
 
 This repository provides the templates for various front-end and back-end frameworks and languages with necessary components that simplify using the cloud services.
 
-The following commands run all the components of Utopiops templates on your machine:
+To run the CLI run the following commands in the terminal:
 
-``` bash
-docker network create -d bridge local --attachable
-docker compose up
+```
+cd cli
+node bin/index.js create
 ```
 
 # ⭐️ `Star us`
