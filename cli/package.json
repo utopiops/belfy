@@ -1,0 +1,27 @@
+{
+  "name": "utopiops-kick-starter",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "utopiops-ks": "./bin/utopiops-kick-starter"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/utopiops/utopiops.git"
+  },
+  "author": "Utopiops",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/utopiops/utopiops/issues"
+  },
+  "homepage": "https://github.com/utopiops/utopiops#readme",
+  "dependencies": {
+    "chalk": "4.1.2",
+    "commander": "^9.2.0",
+    "inquirer": "^8.2.2"
+  }
+}
