@@ -9,7 +9,7 @@ const promptVue = require('./vue');
 const promptNext = require('./next');
 const promptNuxt = require('./nuxt');
 
-const languages = ['Node', 'GO', 'C#', 'Python', 'Java', 'PHP'];
+const languages = ['Node', 'GO', 'C#', 'Python', 'Java', 'PHP', 'Ruby'];
 
 
 const questions = [
