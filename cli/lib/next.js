@@ -5,8 +5,8 @@ const inquirer = require('inquirer');
 const chalk = require('chalk');
 
 const uiFrameworks = ['Ant Design', 'BalmUI', 'Bootstrap', 'Buefy', 'Chakra UI', 'Element', 'Oruga', 'Tachyons', 'Tailwind CSS', 'Windi CSS', 'Vant'];
-const testFrameworks = ['Jest', 'Mocha', 'Enzyme', 'none'];
-const lintingTools = ['TSLint', 'ESLint', 'Prettier', 'StyleLint', 'Commitlint', 'none'];
+const testFrameworks = ['Jest', 'Mocha', 'Enzyme', 'None'];
+const lintingTools = ['TSLint', 'ESLint', 'Prettier', 'StyleLint', 'Commitlint', 'None'];
 
 
 const questions = [
