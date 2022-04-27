@@ -5,8 +5,7 @@ var shell = require('shelljs');
 const { delimiter, bold, white, green } = require('./utils/output');
 const { setupAntDesign } = require('./utils/ui_frameworks');
 const { setupJest } = require('./utils/frontend_test_frameworks');
-
-
+const { setupESLint } = require('./utils/linting');
 
 // import chalk
 
@@ -44,19 +43,17 @@ module.exports = async function (soFar) {
 
   delimiter();
   console.log(white(`Creating the project ${soFar.name} ...`));
-  const path = createProject(soFar.name);
+  createProject(soFar.name);
   handleGit(soFar.name, soFar.git, soFar.gitUrl);
   handleUIFramework(answers.uiFramework, answers.pm);
-  handleTestFramework(answers.testFramework, answers.pm, path);
+  handleTestFramework(answers.testFramework, answers.pm);
+  handleLinting(answers.linting, answers.pm);
 };
 
 const createProject = (name, language) => {
   shell.exec(`npx create-react-app ${name} ${language === 'Typescript' ? '--template typescript' : ''}`);
   console.log(green(`Project's base created`));
   shell.cd(`./${name}`); // Go to the project's directory for the rest of the commands
-  const path = shell.pwd();
-  console.log(`path: ${path}`);
-  return path;
 }
 
 const handleGit = (name, git, gitUrl) => {
@@ -79,9 +76,16 @@ const handleUIFramework = (uiFramework, pm) => {
   console.log(green(`UI framework setup completed`));
 }
 
-const handleTestFramework = (testFramework, pm, path) => {
+const handleTestFramework = (testFramework, pm) => {
   if (testFramework === 'Jest') {
-    setupJest(pm, path);
+    setupJest(pm);
   }
   console.log(green(`Testing framework setup completed`));
+}
+
+const handleLinting = (linting, pm) => {
+  if (linting === 'ESLint') {
+    setupESLint(pm);
+  }
+  console.log(green(`Linting tool setup completed`));
 }
