@@ -3,7 +3,7 @@ var shell = require('shelljs');
 
 
 const { delimiter, bold, white, green } = require('./utils/output');
-const { setupAntDesign } = require('./utils/ui_frameworks');
+const { setupAntDesign, setupBootstrap } = require('./utils/ui_frameworks');
 const { setupJest } = require('./utils/frontend_test_frameworks');
 const { setupESLint } = require('./utils/linting');
 
@@ -11,7 +11,7 @@ const { setupESLint } = require('./utils/linting');
 
 const chalk = require('chalk');
 
-const uiFrameworks = ['Ant Design', 'BalmUI', 'Bootstrap', 'Buefy', 'Chakra UI', 'Element', 'Oruga', 'Tachyons', 'Tailwind CSS', 'Windi CSS', 'Vant'];
+const uiFrameworks = ['Ant Design', 'Bootstrap', 'Chakra UI', 'Element', 'Oruga', 'Tachyons', 'Tailwind CSS', 'Windi CSS', 'Vant'];
 const testFrameworks = ['Jest', 'Mocha', 'Enzyme', 'None'];
 const lintingTools = ['ESLint', 'Prettier', 'StyleLint', 'Commitlint', 'None'];
 
@@ -43,15 +43,19 @@ module.exports = async function (soFar) {
 
   delimiter();
   console.log(white(`Creating the project ${soFar.name} ...`));
-  createProject(soFar.name);
+  createProject(answers.pm, soFar.name, answers.language, soFar.uiFramework);
   handleGit(soFar.name, soFar.git, soFar.gitUrl);
   handleUIFramework(answers.uiFramework, answers.pm);
   handleTestFramework(answers.testFramework, answers.pm);
   handleLinting(answers.linting, answers.pm);
 };
 
-const createProject = (name, language) => {
-  shell.exec(`npx create-react-app ${name} ${language === 'Typescript' ? '--template typescript' : ''}`);
+const createProject = (pm, name, language, uiFramework) => {
+  if (uiFramework === 'Chakra UI') {
+    shell.exec(`${pm === 'Yarn' ? 'yarn create react-app' : 'npx create-react-app'} ${name} ${language === 'Typescript' ? '--template @chakra-ui/typescript' : '@chakra-ui'}`);
+  } else {
+    shell.exec(`${pm === 'Yarn' ? 'yarn create react-app' : 'npx create-react-app'} ${name} ${language === 'Typescript' ? '--template typescript' : ''}`);
+  }
   console.log(green(`Project's base created`));
   shell.cd(`./${name}`); // Go to the project's directory for the rest of the commands
 }
@@ -72,6 +76,8 @@ const handleGit = (name, git, gitUrl) => {
 const handleUIFramework = (uiFramework, pm) => {
   if (uiFramework === 'Ant Design') {
     setupAntDesign(pm);
+  } else if (uiFramework === 'Bootstrap') {
+    setupBootstrap(pm);
   }
   console.log(green(`UI framework setup completed`));
 }

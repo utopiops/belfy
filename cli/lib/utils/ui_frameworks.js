@@ -10,7 +10,16 @@ function setupAntDesign(pm) {
   }
 }
 
+function setupBootstrap(pm) {
+  if (pm === 'Yarn') {
+    shell.exec('yarn add react-bootstrap bootstrap');
+  } else {
+    shell.exec('npm install --save react-bootstrap bootstrap');
+  }
+}
+
 // export
 module.exports = {
   setupAntDesign,
+  setupBootstrap
 };
