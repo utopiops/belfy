@@ -10,6 +10,6 @@ program
   .command('creat')
   .description('Create new project')
   .alias('c')
-  .action(() => create());
+  .action(async () => await create());
 
   program.parse(process.argv);

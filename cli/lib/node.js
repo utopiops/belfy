@@ -6,7 +6,7 @@ const chalk = require('chalk');
 
 const frameworks = ['Express', 'Hapi', 'Koa', 'Meteor', 'Socket.io', 'Nest', 'Sails', 'Total', 'Feather', 'Loopback', 'Adonis', 'Derby', 'None'];
 const testFrameworks = ['Jest', 'Mocha', 'Enzyme', 'None'];
-const lintingTools = ['TSLint', 'ESLint', 'Prettier', 'StyleLint', 'Commitlint', 'None'];
+const lintingTools = ['ESLint', 'Prettier', 'StyleLint', 'Commitlint', 'None'];
 const databases = ['MongoDB', 'MySQL', 'PostgreSQL', 'SQLite', 'MS SQL', 'None'];
 const caches = ['Redis', 'Memcached', 'None'];
 const queues = ['RabbitMQ', 'ActiveMQ','SQS', 'Kafka', 'None'];

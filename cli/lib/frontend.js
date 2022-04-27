@@ -9,7 +9,7 @@ const promptVue = require('./vue');
 const promptNext = require('./next');
 const promptNuxt = require('./nuxt');
 
-const frameworks = ['React','Angular','Vue', 'Svelte', 'Next.js', 'Nuxt'];
+const frameworks = ['React', 'Angular', 'Vue', 'Svelte', 'Next.js', 'Nuxt'];
 
 
 const questions = [
@@ -17,31 +17,30 @@ const questions = [
 ];
 
 
-module.exports = function (soFar) {
-  inquirer
-      .prompt(questions)
-      .then(function (answers) {
-          switch (answers.framework) {
-            case 'React':
-              promptReact({...answers, ...soFar});
-              break;
-            case 'Angular':
-              promptAngular({...answers, ...soFar});
-              break;
-            case 'Vue':
-              promptVue({...answers, ...soFar});
-              break;
-            case 'Svelte':
-              promptNext({...answers, ...soFar});
-              break;
-            case 'Next.js':
-              promptNext({...answers, ...soFar});
-              break;
-            case 'Nuxt':
-              promptNuxt({...answers, ...soFar});
-              break;
-            default:
-              break;
-          }
-      });
+module.exports = async function (soFar) {
+  const answers = await inquirer
+    .prompt(questions);
+  switch (answers.framework) {
+    case 'React':
+      await promptReact({ ...answers, ...soFar });
+      break;
+    case 'Angular':
+      await promptAngular({ ...answers, ...soFar });
+      break;
+    case 'Vue':
+      await promptVue({ ...answers, ...soFar });
+      break;
+    case 'Svelte':
+      await promptNext({ ...answers, ...soFar });
+      break;
+    case 'Next.js':
+      await promptNext({ ...answers, ...soFar });
+      break;
+    case 'Nuxt':
+      await promptNuxt({ ...answers, ...soFar });
+      break;
+    default:
+      break;
+  }
+
 };
