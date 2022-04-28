@@ -11,7 +11,7 @@ const { setupESLint } = require('./utils/linting');
 
 const chalk = require('chalk');
 
-const uiFrameworks = ['Ant Design', 'Bootstrap', 'Chakra UI', 'Element', 'Oruga', 'Tachyons', 'Tailwind CSS', 'Windi CSS', 'Vant'];
+const uiFrameworks = ['Ant Design', 'Bootstrap', 'Chakra UI', 'Tailwind CSS', 'Windi CSS'];
 const testFrameworks = ['Jest', 'Mocha', 'Enzyme', 'None'];
 const lintingTools = ['ESLint', 'Prettier', 'StyleLint', 'Commitlint', 'None'];
 

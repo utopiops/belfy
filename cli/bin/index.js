@@ -7,7 +7,7 @@ const create = require('../lib/create');
 
 
 program
-  .command('creat')
+  .command('create')
   .description('Create new project')
   .alias('c')
   .action(async () => await create());
