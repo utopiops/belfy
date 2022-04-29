@@ -11,6 +11,8 @@ Discord:
 
 https://discord.gg/KStCByYNJG
 
+![capture](https://user-images.githubusercontent.com/15846333/165880171-ba3cec08-f8ae-4bcc-a018-43e423c8cf76.gif)
+
 
 
 # Installation
