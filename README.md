@@ -1,4 +1,4 @@
-# Utopiops
+# Utopiops-kick-starter
 
 <img width="20%" src="https://user-images.githubusercontent.com/15846333/164972654-03c70906-b62c-4872-affa-b39b0b8a0362.png"/>
 
@@ -17,7 +17,14 @@ https://discord.gg/KStCByYNJG
 
 # Installation
 
-To run the CLI, clone the project and in the folder you've cloned it, run the following commands in the terminal:
+To run the CLI using the `npm` package:
+
+```
+npm install @utopiops/kick-starter
+```
+
+
+To run the CLI from the source-code, clone the project and in the folder you've cloned it, run the following commands in the terminal:
 
 ```
 cd cli
