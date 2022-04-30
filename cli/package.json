@@ -1,10 +1,11 @@
 {
-  "name": "utopiops-kick-starter",
-  "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@utopiops/kick-starter",
+  "version": "0.1.1",
+  "description": "A kick-starter for various programming languages and frameworks",
+  "main": "bin/index.js",
   "bin": {
-    "utopiops-ks": "./bin/utopiops-kick-starter"
+    "@utopiops/kick-starter": "bin/index.js",
+    "kik-starter": "bin/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,5 +25,17 @@
     "commander": "^9.2.0",
     "inquirer": "^8.2.2",
     "shelljs": "^0.8.5"
-  }
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "react",
+    "vue",
+    "svelte",
+    "node.js",
+    "boilerplate"
+  ]
 }
