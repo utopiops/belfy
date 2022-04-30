@@ -3,7 +3,7 @@ var shell = require('shelljs');
 
 
 const { delimiter, bold, white, green } = require('./utils/output');
-const { setupAntDesign, setupBootstrap } = require('./utils/ui_frameworks');
+const { setupAntDesign, setupBootstrap, setupTailwind } = require('./utils/ui_frameworks');
 const { setupJest } = require('./utils/frontend_test_frameworks');
 const { setupESLint } = require('./utils/linting');
 
@@ -78,6 +78,8 @@ const handleUIFramework = (uiFramework, pm) => {
     setupAntDesign(pm);
   } else if (uiFramework === 'Bootstrap') {
     setupBootstrap(pm);
+  } else if (uiFramework === 'Tailwind CSS') {
+    setupTailwind(pm);
   }
   console.log(green(`UI framework setup completed`));
 }
