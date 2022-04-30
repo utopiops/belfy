@@ -4,8 +4,8 @@
   "description": "A kick-starter for various programming languages and frameworks",
   "main": "bin/index.js",
   "bin": {
-    "@utopiops/kick-starter": "bin/index.js",
-    "kik-starter": "bin/index.js"
+    "kick-starter": "./bin/index",
+    "ks": "./bin/index"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/utopiops/utopiops.git"
   },
-  "author": "Utopiops",
+  "author": "Mohsen Kamrani",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/utopiops/utopiops/issues"
@@ -30,7 +30,6 @@
     "lib": "lib",
     "test": "test"
   },
-  "devDependencies": {},
   "keywords": [
     "react",
     "vue",
