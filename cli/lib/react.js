@@ -16,7 +16,10 @@ const testFrameworks = [
   'Jest',
   'None'
 ];
-const lintingTools = ['ESLint', 'Prettier', 'StyleLint', 'Commitlint', 'None'];
+const lintingTools = ['ESLint', 'Prettier',
+  // 'StyleLint',
+  //  'Commitlint',
+  'None'];
 
 
 const questions = [
