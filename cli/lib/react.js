@@ -5,14 +5,17 @@ var shell = require('shelljs');
 const { delimiter, bold, white, green } = require('./utils/output');
 const { setupAntDesign, setupBootstrap, setupTailwind } = require('./utils/ui_frameworks');
 const { setupJest } = require('./utils/frontend_test_frameworks');
-const { setupESLint } = require('./utils/linting');
+const { setupESLint, setupPrettier } = require('./utils/linting');
 
 // import chalk
 
 const chalk = require('chalk');
 
-const uiFrameworks = ['Ant Design', 'Bootstrap', 'Chakra UI', 'Tailwind CSS', 'Windi CSS'];
-const testFrameworks = ['Jest', 'Mocha', 'Enzyme', 'None'];
+const uiFrameworks = ['Ant Design', 'Bootstrap', 'Chakra UI', 'Tailwind CSS'];
+const testFrameworks = [
+  'Jest',
+  'None'
+];
 const lintingTools = ['ESLint', 'Prettier', 'StyleLint', 'Commitlint', 'None'];
 
 
@@ -94,6 +97,8 @@ const handleTestFramework = (testFramework, pm) => {
 const handleLinting = (linting, pm) => {
   if (linting === 'ESLint') {
     setupESLint(pm);
+  } else if (linting === 'Prettier') {
+    setupPrettier(pm);
   }
   console.log(green(`Linting tool setup completed`));
 }
