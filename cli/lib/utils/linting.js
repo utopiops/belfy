@@ -2,7 +2,14 @@ const shell = require('shelljs');
 const { execFileSync } = require('child_process'); // We use this as shelljs doesn't support interactive programs
 const { updateProperty } = require('./package_json_manipulation');
 
-function setupESLint(pm) {
+function setupESLint(pm, extras = {}) {
+  // Only for Angular
+  if (extras.framework === 'Angular') {
+    execFileSync('ng', ['add', '@angular-eslint/schematics'], { stdio: 'inherit' });
+    return;
+  }
+
+  // Everything else
   if (pm === 'Yarn') {
     shell.exec('yarn add --dev eslint');
     execFileSync('yarn', ['run', 'eslint', '--init'], { stdio: 'inherit' });
