@@ -1,6 +1,15 @@
 const shell = require('shelljs');
+const { execFileSync } = require('child_process'); // We use this as shelljs doesn't support interactive programs
 
-function setupAntDesign(pm) {
+function setupAntDesign(pm, extras = {}) {
+
+  // Only for Angular
+  if (extras.framework === 'Angular') {
+    execFileSync('ng', ['add', 'ng-zorro-antd'], { stdio: 'inherit' }); 
+    return;
+  }
+
+  // Everything else
   if (pm === 'Yarn') {
     shell.exec('yarn add antd');
     shell.exec('yarn add @ant-design/icons');
@@ -10,7 +19,14 @@ function setupAntDesign(pm) {
   }
 }
 
-function setupBootstrap(pm) {
+function setupBootstrap(pm, extras = {}) {
+  // Only for Angular
+  if (extras.framework === 'Angular') {
+    execFileSync('ng', ['add', '@ng-bootstrap/ng-bootstrap'], { stdio: 'inherit' });
+    return;
+  }
+
+  // Everything else
   if (pm === 'Yarn') {
     shell.exec('yarn add react-bootstrap bootstrap');
   } else {
