@@ -37,6 +37,7 @@ To run the CLI using the `npm` package:
 
 ```
 npm install @utopiops/kick-starter
+ks create
 ```
 
 

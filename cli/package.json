@@ -1,11 +1,10 @@
 {
   "name": "@utopiops/kick-starter",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A kick-starter for various programming languages and frameworks",
   "main": "bin/index.js",
   "bin": {
-    "kick-starter": "./bin/index",
-    "ks": "./bin/index"
+    "ks": "bin/ks"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
