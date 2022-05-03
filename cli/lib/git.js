@@ -24,7 +24,6 @@ module.exports = async function (soFar) {
     prompt(questions);
 
   if (answers.git === 'Local with existing remote repository (you can start pushing to your repository right away)') {
-    console.log(`yessss`)
     const remoteAnswer = await inquirer.prompt([
       {
         type: 'input', name: 'gitUrl', message: 'Remote repository URL: ',
