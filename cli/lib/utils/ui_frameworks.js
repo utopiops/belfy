@@ -34,7 +34,9 @@ function setupBootstrap(pm, extras = {}) {
   }
 }
 
-function setupTailwind(pm) {
+function setupTailwind(pm, extras = {}) {
+
+
   if (pm === 'Yarn') {
     shell.exec('yarn add -D tailwindcss postcss autoprefixer');
     shell.exec('yarn tailwindcss init -p');
@@ -48,11 +50,35 @@ function setupTailwind(pm) {
     if (err) {
       return console.log(err);
     }
-    var result = data.replace(/content: \[\]/g, "content: ['./src/**/*.{js,jsx,ts,tsx}']");
+
+    const newContent = extras.framework === 'Svelte' ? "content: ['./src/**/*.{html,js,svelte,ts}']" : "content: ['./src/**/*.{js,jsx,ts,tsx}']"
+    var result = data.replace(/content: \[\]/g, newContent);
     fs.writeFile(someFile, result, 'utf8', function (err) {
       if (err) return console.log(err);
     });
   });
+
+  // Only for Svelte
+  if (extras.framework === 'Svelte') {
+    const appCss =
+`
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+`
+    const layoutSvelte =
+`
+<script>
+  import "../app.css";
+</script>
+
+<slot />
+`
+
+    fs.writeFileSync('./src/app.css', appCss);
+    fs.writeFileSync('./src/routes/__layout.svelte', layoutSvelte); 
+  }
+
 }
 
 // export
