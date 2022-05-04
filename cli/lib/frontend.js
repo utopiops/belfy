@@ -2,10 +2,10 @@ const inquirer = require('inquirer');
 
 // import chalk
 
-const chalk = require('chalk');
 const promptReact = require('./react');
 const promptAngular = require('./angular');
 const promptVue = require('./vue');
+const promptSvelte = require('./svelte');
 const promptNext = require('./next');
 const promptNuxt = require('./nuxt');
 
@@ -31,7 +31,7 @@ module.exports = async function (soFar) {
       await promptVue({ ...answers, ...soFar });
       break;
     case 'Svelte':
-      await promptNext({ ...answers, ...soFar });
+      await promptSvelte({ ...answers, ...soFar });
       break;
     case 'Next.js':
       await promptNext({ ...answers, ...soFar });

@@ -1,6 +1,6 @@
 {
   "name": "@utopiops/kick-starter",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "A kick-starter for various programming languages and frameworks",
   "main": "bin/index.js",
   "bin": {
