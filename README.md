@@ -23,6 +23,7 @@ https://discord.gg/KStCByYNJG
 ## Next release
 
 <img width="10%" alt="node" src="https://user-images.githubusercontent.com/15846333/166142689-ddcd042c-418a-4336-ab27-76c156f3bb67.png" />
+
 ## Future releases
 
 <img width="10%" alt="Next" src="https://user-images.githubusercontent.com/15846333/166142563-6bc6b8c9-c914-4685-8ca4-7b8cc3509f8f.png" /> <img width="10%" alt="Nuxt" src="https://user-images.githubusercontent.com/15846333/166142496-abdc74e9-2985-4c89-872f-d35e77bb64cc.png" />
