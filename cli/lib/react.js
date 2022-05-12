@@ -99,7 +99,7 @@ const handleTestFramework = (testFramework, pm) => {
 
 const handleLinting = (linting, pm) => {
   if (linting === 'ESLint') {
-    setupESLint(pm);
+    setupESLint(pm, { framework: "React" });
   } else if (linting === 'Prettier') {
     setupPrettier(pm);
   }

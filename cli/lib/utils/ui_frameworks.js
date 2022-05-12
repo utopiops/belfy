@@ -5,7 +5,7 @@ function setupAntDesign(pm, extras = {}) {
 
   // Only for Angular
   if (extras.framework === 'Angular') {
-    execFileSync('ng', ['add', 'ng-zorro-antd'], { stdio: 'inherit' }); 
+    execFileSync('ng', ['add', 'ng-zorro-antd'], { stdio: 'inherit' });
     return;
   }
 
@@ -76,9 +76,20 @@ function setupTailwind(pm, extras = {}) {
 `
 
     fs.writeFileSync('./src/app.css', appCss);
-    fs.writeFileSync('./src/routes/__layout.svelte', layoutSvelte); 
+    fs.writeFileSync('./src/routes/__layout.svelte', layoutSvelte);
   }
 
+  // Only for React
+
+  if (extras.framework === 'React') {
+    const appCss =
+`
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+`
+    fs.writeFileSync('./src/index.css', appCss);
+  }
 }
 
 // export
