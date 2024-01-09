@@ -53,4 +53,28 @@ node bin/ks create
 If you want to support our work - please star this project, every star makes us very happy!
 
 
+---
+utopiops/
+|-- bin/
+|   |-- ks          # The entry point for the CLI
+|
+|-- src/
+|   |-- commands/         # Command modules
+|   |   |-- command1.ts
+|   |   |-- command2.ts
+|   |
+|   |-- common/
+|   |   |-- command1Logic.ts  # Logic for command1
+|   |   |-- command2Logic.ts  # Logic for command2
+|   |
+|   |-- cli/
+|   |   |-- index.ts      # CLI entry point
+|   |
+|   |-- ui/
+|       |-- index.ts      # UI entry point
+|
+|-- package.json
+|-- tsconfig.json
+
+
 
