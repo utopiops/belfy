@@ -3,6 +3,8 @@ const inquirer = require('inquirer');
 // import chalk
 
 const promptGit = require('./git');
+const promptFrontend = require('./frontend');
+const promptBackend = require('./backend');
 
 
 
@@ -18,7 +20,21 @@ const questions = [
 
 
 module.exports = async function () {
-  const answers = await inquirer
+  let answers = await inquirer
     .prompt(questions);
-  await promptGit(answers);
+  answers = await promptGit(answers);
+  
+  switch (answers.stack) {
+    case 'frontend':
+      await promptFrontend(answers);
+      break;
+    case 'backend':
+      await promptBackend(answers);
+      break;
+    // case 'fullstack':
+    //   promptFullstack(answers);
+    //   break;
+    default:
+      break;
+  }
 };
