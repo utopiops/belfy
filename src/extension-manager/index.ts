@@ -45,9 +45,9 @@ function getAvailableOptions(): Options {
   return coreOptions
 }
 
-function getQuestions(option: string) {
+function getQuestions(optionId: string) {
   // todo: get the questions from the dynamically loaded options when supported
-  return coreQuestions[option];
+  return coreQuestions[optionId];
 }
 
 

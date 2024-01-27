@@ -4,6 +4,7 @@
     "module": "esnext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "Node",
     "incremental": true,
     "strict": true,
     "outDir": "./dist",
