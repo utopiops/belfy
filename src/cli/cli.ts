@@ -1,6 +1,9 @@
 import extensionManager from '../extension-manager'
 
+
 import { Answers, QuestionCollection, createPromptModule } from 'inquirer'
+import { promptAnswers } from '../generator/user-inputs/prompt-answers';
+import readAndParseYamlFiles from './config-loader';
 
 /*
 1. load extensions
@@ -11,21 +14,22 @@ import { Answers, QuestionCollection, createPromptModule } from 'inquirer'
 
 const main = async () => {
   const answers = await promptUser();
-  console.log(`answers `, answers);
-  if (answers.beAnswers?.fullStack === 'Yes') {
-      // pass baseAnswers and fsAnswers to generator corresponding to selectedFullStack
+  const parsed = readAndParseYamlFiles(answers.base.dataDefinitionsPath);
+  if (parsed === null) {
+    console.log("invalid configuration, exit...")
+    process.exit(1);
+  }
+  
+
+  if (answers.setup === 'fullStack') {
+    // pass baseAnswers and fsAnswers to generator corresponding to selectedFullStack
   } else {
     // pass baseAnswers and feAnswers to generator corresponding to selectedFrontEnd
     // pass baseAnswers and beAnswers to generator corresponding to selectedBack
   }
 }
 
-type promptAnswers = {
-  base: Answers
-  fsAnswers?: Answers
-  beAnswers?: Answers
-  feAnswers?: Answers
-}
+
 
 const promptUser = async (): Promise<promptAnswers> => {
   /* todo: load the options in extension manager once we start supporting extensions 

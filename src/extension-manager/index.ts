@@ -30,7 +30,7 @@ const coreOptions: Options = {
       description: 'Build a back-end application using Node.js and Express',
     },
   ],
-}
+} as const;
 
 type OptionQuestions = Record<string, QuestionCollection<Answers>>
 
@@ -38,7 +38,7 @@ const coreQuestions: OptionQuestions = {
   'fs-node-express': {},
   'fe-react': {},
   'be-node-express': {}
-}
+} as const;
 
 function getAvailableOptions(): Options {
   // todo: load extra options (dynamicOptions) from the installed packages and return [...dynamicOptions, ...coreOptions]
