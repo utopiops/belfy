@@ -85,6 +85,7 @@ const promptUser = async (): Promise<promptAnswers> => {
       const fsQuestions = extensionManager.getQuestions(baseAnswers.selectedFullStack);
       const fsAnswers = !!fsQuestions ? await prompt(fsQuestions) : {};
       return {
+        setup: 'fullStack',
         base: baseAnswers,
         fsAnswers
       }
@@ -94,6 +95,7 @@ const promptUser = async (): Promise<promptAnswers> => {
       const beQuestions = extensionManager.getQuestions(baseAnswers.selectedBackEnd);
       const beAnswers = !!beQuestions ? await prompt(beQuestions) : {};
       return {
+        setup: 'splitStack',
         base: baseAnswers,
         feAnswers,
         beAnswers
