@@ -1,9 +1,7 @@
-import extensionManager from '../extension-manager'
-
-
-import { Answers, QuestionCollection, createPromptModule } from 'inquirer'
-import { promptAnswers } from '../generator/user-inputs/prompt-answers';
+import * as extensionManager from '../extension-manager/generators'
+import { ProjectConfig } from '../generator/user-inputs/prompt-answers';
 import readAndParseYamlFiles from './config-loader';
+import { Answers, QuestionCollection, createPromptModule } from 'inquirer'
 
 /*
 1. load extensions
@@ -13,15 +11,15 @@ import readAndParseYamlFiles from './config-loader';
 */
 
 const main = async () => {
-  const answers = await promptUser();
-  const parsed = readAndParseYamlFiles(answers.base.dataDefinitionsPath);
+  const projectConfig = await promptUser();
+  const parsed = readAndParseYamlFiles(projectConfig.base.dataDefinitionsPath);
   if (parsed === null) {
     console.log("invalid configuration, exit...")
     process.exit(1);
   }
   
 
-  if (answers.setup === 'fullStack') {
+  if (projectConfig.setup === 'fullStack') {
     // pass baseAnswers and fsAnswers to generator corresponding to selectedFullStack
   } else {
     // pass baseAnswers and feAnswers to generator corresponding to selectedFrontEnd
@@ -31,11 +29,9 @@ const main = async () => {
 
 
 
-const promptUser = async (): Promise<promptAnswers> => {
-  /* todo: load the options in extension manager once we start supporting extensions 
-    await extensionManager.load()
-  */
-    const options = extensionManager.getAvailableOptions()
+const promptUser = async (): Promise<ProjectConfig> => {
+
+    const options = extensionManager.getGeneratorsMeta();
     const questions: QuestionCollection<Answers> = [
       {
         type: 'input',
@@ -58,31 +54,31 @@ const promptUser = async (): Promise<promptAnswers> => {
         name: 'selectedBackEnd',
         message: 'Choose a back-end option:',
         when: (answers: Answers) => answers.fullStack === 'No',
-        choices: options.backEnd.map((opt) => ({ name: opt.label, value: opt.id })),
+        choices: options.filter(opt => opt.stack === 'back')?.map((opt) => ({ name: opt.id, value: opt.id })),
       },
       {
         type: 'list',
         name: 'selectedFrontEnd',
         message: 'Choose a front-end option:',
         when: (answers: Answers) => answers.fullStack === 'No',
-        choices: options.frontEnd.map((opt) => ({ name: opt.label, value: opt.id })),
+        choices: options.filter(opt => opt.stack === 'front')?.map((opt) => ({ name: opt.id, value: opt.id })),
       },
       {
         type: 'list',
         name: 'selectedFullStack',
         message: 'Choose a full-stack option:',
         when: (answers: Answers) => answers.fullStack === 'Yes',
-        choices: options.fullStack.map((opt) => ({ name: opt.label, value: opt.id })),
+        choices: options.filter(opt => opt.stack === 'full')?.map((opt) => ({ name: opt.id, value: opt.id })),
       },
     ]
     const prompt = createPromptModule();
     const baseAnswers = await prompt(questions);
   
-    // if fullStack ask questions specific to the selected option
-    // else ask questions specific to the selected FE and BE
+    // if fullStack ask questions specific to the selected generator
+    // else ask questions specific to the selected FE and BE generators
     let answers: Answers;
     if (baseAnswers.fullStack === 'Yes') {
-      const fsQuestions = extensionManager.getQuestions(baseAnswers.selectedFullStack);
+      const fsQuestions = extensionManager.getGenerator(baseAnswers.selectedBackEnd).getRequiredInputs();
       const fsAnswers = !!fsQuestions ? await prompt(fsQuestions) : {};
       return {
         setup: 'fullStack',
@@ -90,9 +86,9 @@ const promptUser = async (): Promise<promptAnswers> => {
         fsAnswers
       }
     } else {
-      const feQuestions = extensionManager.getQuestions(baseAnswers.selectedFrontEnd);
+      const feQuestions = extensionManager.getGenerator(baseAnswers.selectedFrontEnd).getRequiredInputs();
       const feAnswers = !!feQuestions ? await prompt(feQuestions) : {};
-      const beQuestions = extensionManager.getQuestions(baseAnswers.selectedBackEnd);
+      const beQuestions = extensionManager.getGenerator(baseAnswers.selectedBackEnd).getRequiredInputs();
       const beAnswers = !!beQuestions ? await prompt(beQuestions) : {};
       return {
         setup: 'splitStack',

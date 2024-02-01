@@ -1,14 +1,14 @@
 import { Answers } from "inquirer"
 
-type fullStackProjectAnswers = {
+type FullStackProjectConfig = {
   setup: 'fullStack'
   fsAnswers: Answers
 }
 
-type splitStackProjectAnswers = {
+type SplitStackProjectConfig = {
   setup: 'splitStack'
   beAnswers: Answers
   feAnswers: Answers
 }
 
-export type promptAnswers = (fullStackProjectAnswers | splitStackProjectAnswers ) & { base: Answers}
+export type ProjectConfig = (FullStackProjectConfig | SplitStackProjectConfig ) & { base: Answers}

@@ -1,4 +1,4 @@
-import { PathReporter } from 'io-ts/PathReporter';
+import { PathReporter } from 'io-ts/lib/PathReporter'
 import { Entity, EntityType, NavbarConfig, NavbarConfigType, PageOverrideConfig, PageOverrideConfigType } from "./project-configs";
 
 function validateEntity(entity: unknown): entity is Entity {
