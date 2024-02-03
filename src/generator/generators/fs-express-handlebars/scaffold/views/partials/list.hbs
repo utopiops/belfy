@@ -1,0 +1,20 @@
+<h1>{{name}} list</h1>
+
+<section>
+  <ul class="table-header">
+    {{#each schema.properties}}
+    <li>{{this.name}}</li>
+    {{/each}}
+  </ul>
+  <ul class="table-body">
+    {{#each model}}
+    <li class="table-row">
+      <ul>
+        {{#each ../schema.properties}}
+        <li>{{lookup ../this this.name}}</li>
+        {{/each}}
+      </ul>
+    </li>
+    {{/each}}
+  </ul>
+</section>

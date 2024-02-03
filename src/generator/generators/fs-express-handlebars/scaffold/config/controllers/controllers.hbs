@@ -1,0 +1,13 @@
+{{#each entities}}
+const { {{this.name}} } = require('../models');
+const generateGenericController = require('./genericController');
+
+const {{this.name.toLowerCase()}}Controller = generateGenericController({{this.name}});
+
+{{/each}}
+
+module.exports = {
+{{#each entities}}
+  {{this.name.toLowerCase()}}Controller,
+{{/each}}
+};

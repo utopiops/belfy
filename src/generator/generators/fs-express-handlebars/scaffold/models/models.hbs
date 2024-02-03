@@ -1,0 +1,34 @@
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/sequelize');
+
+{{#each entities}}
+const define{{this.name}}Model = () => {
+  const {{this.name}} = sequelize.define('{{this.name}}', {
+    {{#each this.properties}}
+    {{name}}: {
+      type: DataTypes.{{mapType this.type}},
+      {{#if primaryKey}}
+      primaryKey: true,
+      {{/if}}
+      {{#if reference}}
+      references: {
+        model: '{{reference}}',
+        key: '{{reference}}',
+      },
+      {{/if}}
+    },
+    {{/each}}
+  });
+
+  return {{this.name}};
+};
+
+const {{this.name}} = define{{this.name}}Model();
+
+{{/each}}
+
+module.exports = {
+{{#each entities}}
+  {{this.name}},
+{{/each}}
+};
