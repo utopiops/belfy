@@ -1,5 +1,5 @@
-import { Answers, QuestionCollection } from "inquirer";
-import { ProjectConfig } from "./user-inputs/prompt-answers";
+import { Answers, QuestionCollection } from 'inquirer'
+import { ProjectConfig } from './user-inputs/prompt-answers'
 
 export type GeneratorMeta = {
   id: string

@@ -21,7 +21,11 @@ const coreOptions: Options = {
     },
   ],
   frontEnd: [
-    { id: 'fe-react', label: 'Front-end with React - Consuming REST API', description: 'Build a front-end application using React' },
+    {
+      id: 'fe-react',
+      label: 'Front-end with React - Consuming REST API',
+      description: 'Build a front-end application using React',
+    },
   ],
   backEnd: [
     {
@@ -30,15 +34,15 @@ const coreOptions: Options = {
       description: 'Build a back-end application using Node.js and Express',
     },
   ],
-} as const;
+} as const
 
 type OptionQuestions = Record<string, QuestionCollection<Answers>>
 
 const coreQuestions: OptionQuestions = {
   'fs-node-express': {},
   'fe-react': {},
-  'be-node-express': {}
-} as const;
+  'be-node-express': {},
+} as const
 
 function getAvailableOptions(): Options {
   // todo: load extra options (dynamicOptions) from the installed packages and return [...dynamicOptions, ...coreOptions]
@@ -47,11 +51,10 @@ function getAvailableOptions(): Options {
 
 function getQuestions(optionId: string) {
   // todo: get the questions from the dynamically loaded options when supported
-  return coreQuestions[optionId];
+  return coreQuestions[optionId]
 }
-
 
 export default {
   getAvailableOptions,
-  getQuestions
+  getQuestions,
 }

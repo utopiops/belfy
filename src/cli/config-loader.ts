@@ -1,40 +1,45 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as yaml from 'js-yaml';
-import validate from '../generator/user-inputs/validator';
-import { Entity, NavbarConfig, PageOverrideConfig } from '../generator/user-inputs/project-configs';
+import * as fs from 'fs'
+import * as path from 'path'
+import * as yaml from 'js-yaml'
+import validate from '../generator/user-inputs/validator'
+import { Entity, NavbarConfig, PageOverrideConfig } from '../generator/user-inputs/project-configs'
 
-function readAndParseYamlFiles(directoryPath: string): { entities: Entity[]; navbar: NavbarConfig; pageOverrides: PageOverrideConfig } | null {
-  const entitiesFilePath = path.join(directoryPath, 'entities.yaml');
-  const navbarFilePath = path.join(directoryPath, 'navbar.yaml');
-  const pageOverridesFilePath = path.join(directoryPath, 'page_overrides.yaml');
+async function readYamlFile<T extends unknown | unknown[]>(
+  fileName: string,
+  encoding: BufferEncoding = 'utf8',
+): Promise<T> {
+  const content = await fs.promises.readFile(fileName, encoding)
+  const loaded = yaml.load(content) as T
+  return loaded
+}
 
+async function readAndParseYamlFiles(
+  directoryPath: string,
+): Promise<{ entities: Entity[]; navbar: NavbarConfig; pageOverrides: PageOverrideConfig } | null> {
   try {
-    // Read and parse entities YAML file
-    const entitiesFileContents = fs.readFileSync(entitiesFilePath, 'utf8');
-    const entities = yaml.load(entitiesFileContents) as unknown[];
+    const [entities, navbar, pageOverrides] = await Promise.all([
+      readYamlFile<unknown[]>(path.join(directoryPath, 'entities.yaml')),
+      readYamlFile<unknown>(path.join(directoryPath, 'navbar.yaml')),
+      readYamlFile<unknown>(path.join(directoryPath, 'page_overrides.yaml')),
+    ])
 
-    // Read and parse navbar YAML file
-    const navbarFileContents = fs.readFileSync(navbarFilePath, 'utf8');
-    const navbar = yaml.load(navbarFileContents);
-
-    // Read and parse page overrides YAML file
-    const pageOverridesFileContents = fs.readFileSync(pageOverridesFilePath, 'utf8');
-    const pageOverrides = yaml.load(pageOverridesFileContents);
-
-    // Validate parsed data
-    const validationResult = validate({ entities, navbar, pageOverrides });
-    if (!validationResult) {
-      console.error('Validation failed');
-      return null;
+    if (!entities || !navbar || !pageOverrides) {
+      console.error('One or more YAML files could not be read.')
+      return null
     }
 
-    return validationResult;
+    // Validate parsed data
+    const validationResult = validate({ entities, navbar, pageOverrides })
+    if (!validationResult) {
+      console.error('Validation failed')
+      return null
+    }
+
+    return validationResult
   } catch (error) {
-    console.error('Error reading/parsing YAML files:', error);
-    return null;
+    console.error('Error reading/parsing YAML files:', error)
+    return null
   }
 }
 
-
-export default readAndParseYamlFiles;
+export default readAndParseYamlFiles

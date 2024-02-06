@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext .ts",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
+    "format": "prettier --config .prettierrc  --ignore-path .gitignore --write \"src/**/*.ts\" --parser typescript",
     "test": "jest",
     "build": "tsc",
     "start": "tsx src/cli/cli.ts"

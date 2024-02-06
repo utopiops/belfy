@@ -1,4 +1,4 @@
-import { Answers } from "inquirer"
+import { Answers } from 'inquirer'
 
 type FullStackProjectConfig = {
   setup: 'fullStack'
@@ -11,13 +11,14 @@ type SplitStackProjectConfig = {
   feAnswers: Answers
 }
 
-interface BaseConfig extends Answers {
+export interface BaseConfig extends Answers {
   projectName: string
-dataDefinitionsPath: string
-fullStack: string
-selectedBackEnd: string
-selectedFrontEnd: string
-selectedFullStack: string
+  dataDefinitionsPath: string
+  outputPath: string
+  fullStack: string
+  selectedBackEnd: string
+  selectedFrontEnd: string
+  selectedFullStack: string
 }
 
-export type ProjectConfig = (FullStackProjectConfig | SplitStackProjectConfig ) & { base: BaseConfig}
+export type ProjectConfig = (FullStackProjectConfig | SplitStackProjectConfig) & { base: BaseConfig }
