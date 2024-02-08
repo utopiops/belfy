@@ -28,6 +28,7 @@
     "@types/js-yaml": "^4.0.9",
     "chalk": "4.1.2",
     "commander": "^9.2.0",
+    "handlebars": "^4.7.8",
     "inquirer": "^9.2.12",
     "io-ts": "^2.2.21",
     "js-yaml": "^4.1.0",

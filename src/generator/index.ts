@@ -1,5 +1,6 @@
 import { Answers, QuestionCollection } from 'inquirer'
 import { ProjectConfig } from './user-inputs/prompt-answers'
+import { UserData } from './user-inputs/project-configs'
 
 export type GeneratorMeta = {
   id: string
@@ -8,8 +9,10 @@ export type GeneratorMeta = {
   language?: string
 }
 
+type userData = {}
+
 export interface Generator {
-  generate(projectConfig: ProjectConfig): Promise<void>
+  generate(projectConfig: ProjectConfig, userData: UserData): Promise<void>
   getMeta(): GeneratorMeta
   getRequiredInputs(): QuestionCollection<Answers>
 }
