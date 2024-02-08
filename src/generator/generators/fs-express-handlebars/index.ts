@@ -34,6 +34,33 @@ export class FullStackExpressHandlebarsGenerator implements Generator {
 
 async function renderTemplates(projectConfig: ProjectConfig, workdir: string, userData: UserData) {
   renderModels(projectConfig, workdir, userData)
+  generateRoutes(projectConfig, workdir, userData)
+}
+
+async function generateRoutes(projectConfig: ProjectConfig, workdir: string, userData: UserData) {
+  const generatedCode = `
+import express from 'express';
+const router = express.Router();
+
+${userData.entities
+  .map(
+    (entity) => `
+import ${entity.name.toLowerCase()}Controller from '../controllers/${entity.name.toLowerCase()}Controller';
+
+// Routes for ${entity.name}
+router.get('/${entity.name.toLowerCase()}', ${entity.name.toLowerCase()}Controller.getAll);
+router.get('/${entity.name.toLowerCase()}/:id', ${entity.name.toLowerCase()}Controller.getById);
+router.post('/${entity.name.toLowerCase()}', ${entity.name.toLowerCase()}Controller.create);
+router.put('/${entity.name.toLowerCase()}/:id', ${entity.name.toLowerCase()}Controller.update);
+router.delete('/${entity.name.toLowerCase()}/:id', ${entity.name.toLowerCase()}Controller.delete);
+`,
+  )
+  .join('\n')}
+
+export default router;
+`
+
+  return generatedCode
 }
 
 async function renderModels(projectConfig: ProjectConfig, workdir: string, userData: UserData) {
@@ -109,7 +136,11 @@ function mapSequelizeType(type: string): string {
       return 'DATE'
     case 'text':
       return 'TEXT'
-    case 'file': // todo: decide about this. Not a good idea to store the file or image as blob, instead have to have an upload mechanism and store the url
+    /* 
+    TODO: decide about this. Not a good idea to store the file or image as blob, instead have to have an upload mechanism and store the url
+    labels: help-wanted
+    */
+    case 'file':
       return 'BLOB'
     case 'image':
       return 'BLOB'
