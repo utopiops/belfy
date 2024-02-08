@@ -1,0 +1,20 @@
+<!-- List Entity View -->
+<h1>{{ entityName }} List</h1>
+<table>
+  <thead>
+    <tr>
+      {{#each properties}}
+        <th>{{ this.name }}</th>
+      {{/each}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#each items}}
+      <tr>
+        {{#each properties}}
+          <td>{{ getValue this.name ../this }}</td>
+        {{/each}}
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
