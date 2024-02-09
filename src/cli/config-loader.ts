@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as yaml from 'js-yaml'
 import validate from '../generator/user-inputs/validator'
-import { Entity, NavbarConfig, PageOverrideConfig } from '../generator/user-inputs/project-configs'
+import { Entity, NavbarConfig, PageOverrideConfig, UserData } from '../generator/user-inputs/project-configs'
 
 async function readYamlFile<T extends unknown | unknown[]>(
   fileName: string,
@@ -13,9 +13,7 @@ async function readYamlFile<T extends unknown | unknown[]>(
   return loaded
 }
 
-async function readAndParseYamlFiles(
-  directoryPath: string,
-): Promise<{ entities: Entity[]; navbar: NavbarConfig; pageOverrides: PageOverrideConfig } | null> {
+async function readAndParseYamlFiles(directoryPath: string): Promise<UserData> {
   try {
     const [entities, navbar, pageOverrides] = await Promise.all([
       readYamlFile<unknown[]>(path.join(directoryPath, 'entities.yaml')),
@@ -25,20 +23,20 @@ async function readAndParseYamlFiles(
 
     if (!entities || !navbar || !pageOverrides) {
       console.error('One or more YAML files could not be read.')
-      return null
+      throw new Error('One or more YAML files could not be read.')
     }
 
     // Validate parsed data
     const validationResult = validate({ entities, navbar, pageOverrides })
     if (!validationResult) {
       console.error('Validation failed')
-      return null
+      throw new Error('Validation failed')
     }
 
     return validationResult
   } catch (error) {
     console.error('Error reading/parsing YAML files:', error)
-    return null
+    throw new Error('Error reading/parsing YAML files')
   }
 }
 

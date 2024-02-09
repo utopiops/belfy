@@ -42,3 +42,4 @@ export const PageOverrideConfigType = t.record(
 export interface Entity extends t.TypeOf<typeof EntityType> {}
 export interface NavbarConfig extends t.TypeOf<typeof NavbarConfigType> {}
 export interface PageOverrideConfig extends t.TypeOf<typeof PageOverrideConfigType> {}
+export type UserData = { entities: Entity[]; navbar: NavbarConfig; pageOverrides: PageOverrideConfig }

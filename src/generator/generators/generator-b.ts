@@ -1,8 +1,9 @@
 import { Generator, GeneratorMeta } from '..'
+import { UserData } from '../user-inputs/project-configs'
 import { ProjectConfig } from '../user-inputs/prompt-answers'
 
 export class GeneratorB implements Generator {
-  async generate(projectConfig: ProjectConfig): Promise<void> {
+  async generate(projectConfig: ProjectConfig, userData: UserData): Promise<void> {
     await Promise.all([])
     return
   }

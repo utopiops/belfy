@@ -3,7 +3,7 @@ function generateGenericController(Model, schema) {
     async getAll(req, res) {
       try {
         const entities = await Model.findAll();
-        res.render('list', { name: Model.name, entities, schema });
+        res.render(`${Model.name}-list`, { name: Model.name, entities, schema });
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');

@@ -1,15 +1,21 @@
 import fs from 'fs'
 import path from 'path'
 
-export async function copyFolderRecursive(source: string, destination: string): Promise<void> {
+async function ensurePathExists(directoryPath: string): Promise<void> {
   try {
-    // Create destination folder if it doesn't exist
-    await fs.mkdirSync(destination, { recursive: true })
+    await fs.promises.access(directoryPath, fs.constants.F_OK)
   } catch (error: any) {
-    if (error.code !== 'EEXIST') {
+    if (error.code === 'ENOENT') {
+      await fs.promises.mkdir(directoryPath, { recursive: true })
+    } else {
       throw error
     }
   }
+}
+
+async function copyFolderRecursive(source: string, destination: string): Promise<void> {
+  await ensurePathExists(destination)
+
   const entries = await fs.promises.readdir(source)
 
   for (const entry of entries) {
@@ -32,5 +38,25 @@ export async function copyFolder(source: string, destination: string): Promise<v
     console.log(`Folder copied from ${source} to ${destination} successfully.`)
   } catch (error) {
     console.error('Error copying folder:', error)
+  }
+}
+
+export async function writeFile(content: string, destination: string): Promise<void> {
+  try {
+    const directory = path.dirname(destination)
+    await ensurePathExists(directory) // Ensure directory exists
+
+    const fileExists = await fs.promises
+      .access(destination)
+      .then(() => true)
+      .catch(() => false)
+
+    if (!fileExists) {
+      await fs.promises.writeFile(destination, content)
+    } else {
+      throw new Error(`File already exists at ${destination}`)
+    }
+  } catch (error) {
+    throw error
   }
 }

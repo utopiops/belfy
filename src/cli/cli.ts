@@ -1,4 +1,5 @@
 import * as extensionManager from '../extension-manager/generators'
+import { UserData } from '../generator/user-inputs/project-configs'
 import { BaseConfig, ProjectConfig } from '../generator/user-inputs/prompt-answers'
 import readAndParseYamlFiles from './config-loader'
 import { Answers, QuestionCollection, createPromptModule } from 'inquirer'
@@ -12,8 +13,10 @@ import { Answers, QuestionCollection, createPromptModule } from 'inquirer'
 
 const main = async () => {
   const projectConfig = await promptUser()
-  const parsed = readAndParseYamlFiles(projectConfig.base.dataDefinitionsPath)
-  if (parsed === null) {
+  let parsed: Readonly<UserData>
+  try {
+    parsed = await readAndParseYamlFiles(projectConfig.base.dataDefinitionsPath)
+  } catch (error) {
     console.log('invalid configuration, exit...')
     process.exit(1)
   }
@@ -21,7 +24,7 @@ const main = async () => {
   if (projectConfig.setup === 'fullStack') {
     // pass baseAnswers and fsAnswers to generator corresponding to selectedFullStack
     const generator = extensionManager.getGenerator(projectConfig.base.selectedFullStack)
-    generator.generate(projectConfig)
+    generator.generate(projectConfig, parsed)
   } else {
     // pass baseAnswers and feAnswers to generator corresponding to selectedFrontEnd
     // pass baseAnswers and beAnswers to generator corresponding to selectedBack
