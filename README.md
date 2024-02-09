@@ -19,10 +19,10 @@ Belfy is a tool for generating CRUD web applications based on provided data defi
 <img width="10%" alt="node" src="https://user-images.githubusercontent.com/15846333/166142689-ddcd042c-418a-4336-ab27-76c156f3bb67.png" />
 
 ### Front-end
--
+coming soon
 
 ### Back-end
--
+coming soon
 
 
 ## Future releases
@@ -71,3 +71,6 @@ This project is licensed under the Apache-2.0 License - see the LICENSE file for
 # Belfy Mascot
 
 Isn't Belfy adorable? Meet our mascot, the cute and cuddly Belfy creature!
+
+<img width="20%" alt="belfy" src="https://github.com/utopiops/belfy/assets/15846333/c85b83ee-b13d-414b-b995-0f11d9f05f83" /> 
+
