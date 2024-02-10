@@ -1,3 +1,6 @@
+
+<img width="10%" alt="belfy" src="https://github.com/utopiops/belfy/assets/15846333/1686367e-2000-4dcc-a4f5-14b6351a29d3"/> 
+
 # Belfy
 
 Belfy is a tool for generating CRUD web applications based on provided data definitions. It simplifies the process of creating full-stack or split-stack applications by automatically generating the necessary code based on the user's input.
@@ -71,6 +74,5 @@ This project is licensed under the Apache-2.0 License - see the LICENSE file for
 # Belfy Mascot
 
 Isn't Belfy adorable? Meet our mascot, the cute and cuddly Belfy creature!
-
-<img width="20%" alt="belfy" src="https://github.com/utopiops/belfy/assets/15846333/c85b83ee-b13d-414b-b995-0f11d9f05f83" /> 
+<img width="20%" alt="belfy" src="https://github.com/utopiops/belfy/assets/15846333/5c94a815-8fc4-4bc8-9d89-cc37b588d351" /> 
 
