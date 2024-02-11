@@ -1,9 +1,9 @@
-function generateGenericController(Model, schema) {
+function generateGenericController(Model) {
   return {
     async getAll(req, res) {
       try {
         const entities = await Model.findAll();
-        res.render(`${Model.name}-list`, { name: Model.name, entities, schema });
+        res.render(`${Model.name}-list`, { name: Model.name, entities });
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -17,16 +17,30 @@ function generateGenericController(Model, schema) {
         if (!entity) {
           return res.status(404).send(`${Model.name} not found`);
         }
-        res.render('details', { entity, schema });
+        res.render('details', { entity });
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
       }
     },
 
-    // Render the form for creating a new entity
     renderCreateForm(req, res) {
-      res.render('create');
+      res.render(`${Model.name}-add-form`);
+    },
+    
+    async renderEditForm(req, res) {
+      const { id } = req.params;
+      try {
+        const entity = await Model.findByPk(id);
+        if (!entity) {
+          return res.status(404).send(`${Model.name} not found`);
+        }
+        res.render(`${Model.name}-edit-form`, { entity});
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
+
     },
 
     async create(req, res) {
@@ -48,7 +62,7 @@ function generateGenericController(Model, schema) {
         if (!entity) {
           return res.status(404).send(`${Model.name} not found`);
         }
-        res.render('update', { entity, schema });
+        res.render('update', { entity });
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');

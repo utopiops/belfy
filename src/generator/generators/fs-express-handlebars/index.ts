@@ -101,9 +101,7 @@ async function generateDetailsView(workdir: string, entity: Entity) {
 async function generateFormView(workdir: string, entity: Entity, isUpdate: boolean = false) {
   const formTitle = isUpdate ? `Edit ${entity.name}` : `Add ${entity.name}`
   const submitButtonText = isUpdate ? 'Update' : 'Submit'
-  const formAction = isUpdate
-    ? `/${entity.name.toLowerCase()}/{{model.id}}?_method=PUT`
-    : `/${entity.name.toLowerCase()}`
+  const formAction = isUpdate ? `/${entity.name.toLowerCase()}/{{model.id}}` : `/${entity.name.toLowerCase()}`
 
   const generatedCode = `
 <h1>${formTitle} Form</h1>
@@ -153,18 +151,20 @@ async function generateRoutes(workdir: string, userData: UserData) {
   const generatedCode = `
 const express = require('express');
 const router = express.Router();
+const controllers = require('../controllers');
 
 ${userData.entities
   .map(
     (entity) => `
-const ${entity.name.toLowerCase()}Controller = require('../controllers/${entity.name.toLowerCase()}Controller');
 
 // Routes for ${entity.name}
-router.get('/${entity.name.toLowerCase()}', ${entity.name.toLowerCase()}Controller.getAll);
-router.get('/${entity.name.toLowerCase()}/:id', ${entity.name.toLowerCase()}Controller.getById);
-router.post('/${entity.name.toLowerCase()}', ${entity.name.toLowerCase()}Controller.create);
-router.put('/${entity.name.toLowerCase()}/:id', ${entity.name.toLowerCase()}Controller.update);
-router.delete('/${entity.name.toLowerCase()}/:id', ${entity.name.toLowerCase()}Controller.delete);
+router.get('/${entity.name.toLowerCase()}', controllers.${entity.name.toLowerCase()}Controller.getAll);
+router.get('/${entity.name.toLowerCase()}/:id', controllers.${entity.name.toLowerCase()}Controller.getById);
+router.get('/${entity.name.toLowerCase()}/new', controllers.${entity.name.toLowerCase()}Controller.renderCreateForm);
+router.get('/${entity.name.toLowerCase()}/:id/edit', controllers.${entity.name.toLowerCase()}Controller.renderEditForm);
+router.post('/${entity.name.toLowerCase()}', controllers.${entity.name.toLowerCase()}Controller.create);
+router.post('/${entity.name.toLowerCase()}/:id', controllers.${entity.name.toLowerCase()}Controller.update);
+router.delete('/${entity.name.toLowerCase()}/:id', controllers.${entity.name.toLowerCase()}Controller.delete);
 `,
   )
   .join('\n')}
