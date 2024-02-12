@@ -8,6 +8,7 @@ async function ensurePathExists(directoryPath: string): Promise<void> {
     if (error.code === 'ENOENT') {
       await fs.promises.mkdir(directoryPath, { recursive: true })
     } else {
+      console.error(error)
       throw error
     }
   }
@@ -41,7 +42,16 @@ export async function copyFolder(source: string, destination: string): Promise<v
   }
 }
 
-export async function writeFile(content: string, destination: string): Promise<void> {
+export async function readFile(filePath: string): Promise<string> {
+  try {
+    return await fs.promises.readFile(filePath, 'utf8')
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export async function writeFile(content: string, destination: string, overwrite: boolean = false): Promise<void> {
   try {
     const directory = path.dirname(destination)
     await ensurePathExists(directory) // Ensure directory exists
@@ -51,12 +61,13 @@ export async function writeFile(content: string, destination: string): Promise<v
       .then(() => true)
       .catch(() => false)
 
-    if (!fileExists) {
+    if (!fileExists || overwrite) {
       await fs.promises.writeFile(destination, content)
     } else {
       throw new Error(`File already exists at ${destination}`)
     }
   } catch (error) {
+    console.error(error)
     throw error
   }
 }
