@@ -12,7 +12,7 @@ export class FullStackExpressHandlebarsGenerator implements Generator {
       const dest = path.join(projectConfig.base.outputPath, projectConfig.base.projectName)
       await copyFolder(src, dest)
 
-      // render the handlebars template
+      // generate the dynamic files for routes, controllers, etc.
       await generateTemplates(dest, userData)
 
       // clean up the project
@@ -75,7 +75,7 @@ const sequelize = new Sequelize({
 const { Sequelize } = require('sequelize');
 ${dbConfigCode}
 
-module.exports = sequelize;
+module.exports = {sequelize};
 `
 
   await writeFile(indexFileContent, path.join(workdir, 'models', 'config.js'))
@@ -111,7 +111,7 @@ async function generateNavbar(workdir: string, entities: Entity[]) {
     </ul>
 </nav>
 `
-  await writeFile(generatedCode, path.join(workdir, 'views', 'layouts', 'navbar.hbs'))
+  await writeFile(generatedCode, path.join(workdir, 'views', 'partials', 'navbar.handlebars'))
 }
 
 async function generateEntityViews(workdir: string, entity: Entity) {
@@ -149,7 +149,7 @@ async function generateListView(workdir: string, entity: Entity) {
   </ul>
 </section>
 `
-  await writeFile(generatedCode, path.join(workdir, 'views', 'partials', `${entity.name}-list.hbs`))
+  await writeFile(generatedCode, path.join(workdir, 'views', `${entity.name}-list.handlebars`))
 }
 
 async function generateDetailsView(workdir: string, entity: Entity) {
@@ -165,7 +165,7 @@ async function generateDetailsView(workdir: string, entity: Entity) {
     </ul>
 </section>
 `
-  await writeFile(generatedCode, path.join(workdir, 'views', 'partials', `${entity.name}-details.hbs`))
+  await writeFile(generatedCode, path.join(workdir, 'views', `${entity.name}-details.handlebars`))
 }
 
 async function generateFormView(workdir: string, entity: Entity, isUpdate: boolean = false) {
@@ -191,7 +191,7 @@ async function generateFormView(workdir: string, entity: Entity, isUpdate: boole
 `
   await writeFile(
     generatedCode,
-    path.join(workdir, 'views', 'partials', `${entity.name}-${isUpdate ? 'edit' : 'add'}-form.hbs`),
+    path.join(workdir, 'views', `${entity.name}-${isUpdate ? 'edit' : 'add'}-form.handlebars`),
   )
 }
 
@@ -262,13 +262,13 @@ const define${entity.name}Model = () => {
         ${property.name}: {
             type: DataTypes.${mapSequelizeType(property.type)},
             ${property.primaryKey ? `primaryKey: true,` : ''}
-            ${property.reference ? `references: { model: '${property.reference}', key: '${property.reference}' },` : ''}
+            ${property.reference ? `references: { model: '${property.reference.model}', key: '${property.reference.property}' },` : ''}
         },`,
           )
           .join('')}
     };
     
-    const ${entity.name} = sequelize.define('${entity.name}', properties);
+    const ${entity.name} = sequelize.define('${entity.name}', properties, { tableName: '${entity.name}' }); // We want to know the exact table names to use in references
     return ${entity.name};
 };
 
