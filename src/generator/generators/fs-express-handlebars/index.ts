@@ -126,28 +126,58 @@ async function generateEntityViews(workdir: string, entity: Entity) {
 async function generateListView(workdir: string, entity: Entity) {
   const generatedCode = `
 <h1>{{name}} list</h1>
-  <section>
-  <ul class="table-header">
-    ${entity.properties
-      .map((p) => {
-        return `<li>${p.name}</li>`
-      })
-      .join('\n')}
-  </ul>
-  <ul class="table-body">
-    {{#each model}}
-    <li class="table-row">
-      <ul>
-      ${entity.properties
-        .map((p) => {
-          return `<li>{{this.${p.name}}}</li>`
-        })
-        .join('\n')}
-      </ul>
-    </li>
-    {{/each}}
-  </ul>
+<section>
+    <div>
+        <a href="/${entity.name.toLowerCase()}/new">+ Create</a>
+    </div>
+    <ul class="table-header">
+        ${entity.properties
+          .map((p) => {
+            return `<li>${p.name}</li>`
+          })
+          .join('\n')}
+        <li>Actions</li>
+    </ul>
+    <ul class="table-body">
+        {{#each entities}}
+            <li class="table-row">
+                <ul>
+                    ${entity.properties
+                      .map((p) => {
+                        return `<li>{{${p.name}}}</li>`
+                      })
+                      .join('\n')}
+                    <li>
+                        <a href="/${entity.name.toLowerCase()}/edit/{{id}}">Edit</a>
+                        <button onclick="confirmDelete('{{id}}')">Delete</button>
+                    </li>
+                </ul>
+            </li>
+        {{/each}}
+    </ul>
 </section>
+<script>
+    function confirmDelete(id) {
+        if (confirm('Are you sure you want to delete this ${entity.name}?')) {
+            // Send delete request to the server
+            fetch('/${entity.name.toLowerCase()}/' + id, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Reload the page after successful deletion
+                    location.reload();
+                } else {
+                    throw new Error('Failed to delete ${entity.name}');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Failed to delete ${entity.name}. Please try again later.');
+            });
+        }
+    }
+</script>
 `
   await writeFile(generatedCode, path.join(workdir, 'views', `${entity.name}-list.handlebars`))
 }
@@ -159,11 +189,37 @@ async function generateDetailsView(workdir: string, entity: Entity) {
     <ul>
         ${entity.properties
           .map((p) => {
-            return `<li><strong>${p.name}:</strong> {{model.${p.name}}}</li>`
+            return `<li><strong>${p.name}:</strong> {{${p.name}}}</li>`
           })
           .join('\n')}
     </ul>
+    <div>
+        <a href="/${entity.name.toLowerCase()}/edit">Edit</a>
+        <button onclick="confirmDelete()">Delete</button>
+    </div>
 </section>
+<script>
+    function confirmDelete() {
+        if (confirm('Are you sure you want to delete this ${entity.name}?')) {
+            // Send delete request to the server
+            fetch('/${entity.name.toLowerCase()}/' + id, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to list or home page after successful deletion
+                    window.location.href = '/${entity.name.toLowerCase()}'; // Replace with appropriate URL
+                } else {
+                    throw new Error('Failed to delete ${entity.name}');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Failed to delete ${entity.name}. Please try again later.');
+            });
+        }
+    }
+</script>
 `
   await writeFile(generatedCode, path.join(workdir, 'views', `${entity.name}-details.handlebars`))
 }
@@ -171,14 +227,14 @@ async function generateDetailsView(workdir: string, entity: Entity) {
 async function generateFormView(workdir: string, entity: Entity, isUpdate: boolean = false) {
   const formTitle = isUpdate ? `Edit ${entity.name}` : `Add ${entity.name}`
   const submitButtonText = isUpdate ? 'Update' : 'Submit'
-  const formAction = isUpdate ? `/${entity.name.toLowerCase()}/{{model.id}}` : `/${entity.name.toLowerCase()}`
+  const formAction = isUpdate ? `/${entity.name.toLowerCase()}/{{entity.id}}` : `/${entity.name.toLowerCase()}`
 
   const generatedCode = `
-<h1>${formTitle} Form</h1>
+<h1>${formTitle}</h1>
 <form action="${formAction}" method="POST">
     ${entity.properties
       .map((p) => {
-        const defaultValue = isUpdate ? ` value="{{model.${p.name}}}"` : ''
+        const defaultValue = isUpdate ? ` value="{{entity.${p.name}}}"` : ''
         return `
     <div>
         <label for="${p.name}">${p.name}:</label>
@@ -229,9 +285,9 @@ ${userData.entities
 
 // Routes for ${entity.name}
 router.get('/${entity.name.toLowerCase()}', controllers.${entity.name.toLowerCase()}Controller.getAll);
-router.get('/${entity.name.toLowerCase()}/:id', controllers.${entity.name.toLowerCase()}Controller.getById);
+router.get('/${entity.name.toLowerCase()}/id/:id', controllers.${entity.name.toLowerCase()}Controller.getById);
 router.get('/${entity.name.toLowerCase()}/new', controllers.${entity.name.toLowerCase()}Controller.renderCreateForm);
-router.get('/${entity.name.toLowerCase()}/:id/edit', controllers.${entity.name.toLowerCase()}Controller.renderEditForm);
+router.get('/${entity.name.toLowerCase()}/edit/:id', controllers.${entity.name.toLowerCase()}Controller.renderEditForm);
 router.post('/${entity.name.toLowerCase()}', controllers.${entity.name.toLowerCase()}Controller.create);
 router.post('/${entity.name.toLowerCase()}/:id', controllers.${entity.name.toLowerCase()}Controller.update);
 router.delete('/${entity.name.toLowerCase()}/:id', controllers.${entity.name.toLowerCase()}Controller.delete);

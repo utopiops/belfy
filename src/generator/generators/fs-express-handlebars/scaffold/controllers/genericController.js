@@ -2,7 +2,7 @@ function generateGenericController(Model) {
   return {
     async getAll(req, res) {
       try {
-        const entities = await Model.findAll();
+        const entities = await Model.findAll({ raw: true });
         res.render(`${Model.name}-list`, { name: Model.name, entities });
       } catch (error) {
         console.error(error);
@@ -13,7 +13,7 @@ function generateGenericController(Model) {
     async getById(req, res) {
       const { id } = req.params;
       try {
-        const entity = await Model.findByPk(id);
+        const entity = await Model.findByPk(id, { raw: true });
         if (!entity) {
           return res.status(404).send(`${Model.name} not found`);
         }
@@ -31,7 +31,7 @@ function generateGenericController(Model) {
     async renderEditForm(req, res) {
       const { id } = req.params;
       try {
-        const entity = await Model.findByPk(id);
+        const entity = await Model.findByPk(id, { raw: true });
         if (!entity) {
           return res.status(404).send(`${Model.name} not found`);
         }
@@ -48,21 +48,6 @@ function generateGenericController(Model) {
       try {
         const entity = await Model.create(data);
         res.redirect(`/${Model.name.toLowerCase()}`);
-      } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-      }
-    },
-
-    // Render the form for updating an existing entity
-    async renderUpdateForm(req, res) {
-      const { id } = req.params;
-      try {
-        const entity = await Model.findByPk(id);
-        if (!entity) {
-          return res.status(404).send(`${Model.name} not found`);
-        }
-        res.render('update', { entity });
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -88,7 +73,7 @@ function generateGenericController(Model) {
     async delete(req, res) {
       const { id } = req.params;
       try {
-        const entity = await Model.findByPk(id);
+        const entity = await Model.findByPk(id, { raw: true });
         if (!entity) {
           return res.status(404).send(`${Model.name} not found`);
         }
