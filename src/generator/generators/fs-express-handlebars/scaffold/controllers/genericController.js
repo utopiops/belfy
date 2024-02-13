@@ -73,12 +73,12 @@ function generateGenericController(Model) {
     async delete(req, res) {
       const { id } = req.params;
       try {
-        const entity = await Model.findByPk(id, { raw: true });
+        const entity = await Model.findByPk(id);
         if (!entity) {
           return res.status(404).send(`${Model.name} not found`);
         }
         await entity.destroy();
-        res.redirect(`/${Model.name.toLowerCase()}`);
+        res.sendStatus(200);
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
