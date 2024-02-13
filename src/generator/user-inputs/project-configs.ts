@@ -15,7 +15,10 @@ export const EntityPropertyType = t.intersection([
   }),
   t.partial({
     primaryKey: t.boolean,
-    reference: t.string,
+    reference: t.type({
+      model: t.string,
+      property: t.string,
+    }),
   }),
 ])
 

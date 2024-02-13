@@ -9,7 +9,7 @@ Belfy is a tool for generating CRUD web applications based on provided data defi
 
 - **Automatic Code Generation:** Belfy generates code for CRUD operations based on the provided data definitions.
 - **Modular Architecture:** Easily extend Belfy with additional frameworks, languages, and features through modular plugins.
-- **Multiple Framework Support:** Currently supports React + Node.js (Express) stack, with plans to add support for more frameworks in the future.
+- **Multiple Framework Support:** Currently supports Node.js (Express) full-stack, with plans to add support for more frameworks in the future.
 - **Customization:** Customize the generated code by providing specific options and configurations.
 
 

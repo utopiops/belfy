@@ -1,7 +1,7 @@
 {
-  "name": "@utopiops/kick-starter",
+  "name": "@utopiops/belfy",
   "version": "0.5.0",
-  "description": "A kick-starter for various programming languages and frameworks",
+  "description": "Create CRUD applications from data definitions.",
   "main": "bin/index.js",
   "type": "module",
   "bin": {
