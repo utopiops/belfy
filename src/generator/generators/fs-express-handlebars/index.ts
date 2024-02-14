@@ -100,7 +100,7 @@ async function generateViews(workdir: string, userData: UserData) {
 async function generateNavbar(workdir: string, entities: Entity[]) {
   const generatedCode = `
 <nav>
-    <ul>
+    <ul class="navbar">
         ${entities
           .map(
             (entity) => `
