@@ -100,7 +100,7 @@ async function generateViews(workdir: string, userData: UserData) {
 async function generateNavbar(workdir: string, entities: Entity[]) {
   const generatedCode = `
 <nav>
-    <ul>
+    <ul class="navbar">
         ${entities
           .map(
             (entity) => `
@@ -128,33 +128,33 @@ async function generateListView(workdir: string, entity: Entity) {
 <h1>{{name}} list</h1>
 <section>
     <div>
-        <a href="/${entity.name.toLowerCase()}/new">+ Create</a>
+        <a class="create-button" href="/${entity.name.toLowerCase()}/new">+ Create</a>
     </div>
-    <ul class="table-header">
-        ${entity.properties
-          .map((p) => {
-            return `<li>${p.name}</li>`
-          })
-          .join('\n')}
-        <li>Actions</li>
-    </ul>
-    <ul class="table-body">
-        {{#each entities}}
-            <li class="table-row">
-                <ul>
-                    ${entity.properties
-                      .map((p) => {
-                        return `<li>{{${p.name}}}</li>`
-                      })
-                      .join('\n')}
-                    <li>
-                        <a href="/${entity.name.toLowerCase()}/edit/{{id}}">Edit</a>
-                        <button onclick="confirmDelete('{{id}}')">Delete</button>
-                    </li>
-                </ul>
-            </li>
-        {{/each}}
-    </ul>
+    <div class="table">
+      <div class="table-header">
+          ${entity.properties
+            .map((p) => {
+              return `<div>${p.name}</div>`
+            })
+            .join('\n')}
+          <div>Actions</div>
+      </div>
+      <div class="table-body">
+          {{#each entities}}
+              <div class="table-row">
+                ${entity.properties
+                  .map((p) => {
+                    return `<div>{{${p.name}}}</div>`
+                  })
+                  .join('\n')}
+                <div class="actions">
+                    <a href="/${entity.name.toLowerCase()}/edit/{{id}}">Edit</a>
+                    <button class="btn-danger" onclick="confirmDelete('{{id}}')">Delete</button>
+                </div>
+              </div>
+          {{/each}}
+      </div>
+    </div>
 </section>
 <script>
     function confirmDelete(id) {
@@ -236,9 +236,9 @@ async function generateFormView(workdir: string, entity: Entity, isUpdate: boole
       .map((p) => {
         const defaultValue = isUpdate ? ` value="{{entity.${p.name}}}"` : ''
         return `
-    <div>
+    <div class="form-group">
         <label for="${p.name}">${p.name}:</label>
-        <input type="text" id="${p.name}" name="${p.name}" required${defaultValue}>
+        <input type="text" id="${p.name}" name="${p.name}" class="form-control" required${defaultValue}>
     </div>`
       })
       .join('\n')}
