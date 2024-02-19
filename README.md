@@ -3,7 +3,7 @@
 
 # Belfy
 
-Belfy is a tool for generating CRUD web applications based on provided data definitions. It simplifies the process of creating full-stack or split-stack applications by automatically generating the necessary code based on the user's input.
+[Belfy](https://belfy.io) is a tool for generating CRUD web applications based on provided data definitions. It simplifies the process of creating full-stack or split-stack applications by automatically generating the necessary code based on the user's input.
 
 ## Features
 
@@ -51,11 +51,12 @@ Coming soon:
 To run the CLI using the `npm` package:
 
 ```
-npm install belfy
+npm install @utopiops/belfy
 belfy generate
 ```
 
 # Documentation
+See [belfy.io](https://belfy.io).
 ## Configuration
 Belfy uses YAML files to define data models, navigation bars, and page overrides.
 
