@@ -1,4 +1,4 @@
-function generateGenericController(Model) {
+function controllerFactory(Model) {
   return {
     async getAll(req, res) {
       try {
@@ -87,4 +87,4 @@ function generateGenericController(Model) {
   };
 }
 
-module.exports = generateGenericController;
+module.exports = controllerFactory;
