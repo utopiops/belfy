@@ -1,0 +1,32 @@
+- name: User
+  properties:
+    - name: name
+      type: string
+
+- name: Product
+  properties:
+    - name: name
+      type: string
+    - name: price
+      type: number
+    - name: description
+      type: text
+
+- name: Order
+  properties:
+    - name: customerId
+      type: number
+      reference: 
+        model: User
+        property: id
+    - name: totalAmount
+      type: number
+    - name: status
+      type: string
+
+- name: Category
+  properties:
+    - name: name
+      type: string
+    - name: description
+      type: text

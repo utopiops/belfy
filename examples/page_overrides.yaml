@@ -1,0 +1,28 @@
+Product:
+  show_fields:
+    - name
+    - price
+    - description
+  allow_create: true
+  allow_read: true
+  allow_update: true
+  allow_delete: true
+
+Order:
+  show_fields:
+    - customerId
+    - totalAmount
+    - status
+  allow_create: true
+  allow_read: true
+  allow_update: true
+  allow_delete: true
+
+Category:
+  show_fields:
+    - name
+    - description
+  allow_create: true
+  allow_read: true
+  allow_update: true
+  allow_delete: true
