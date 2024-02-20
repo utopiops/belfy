@@ -10,7 +10,7 @@ export class GeneratorB implements Generator {
   getMeta(): GeneratorMeta {
     return {
       id: 'generator-b',
-      stack: 'full',
+      stack: 'front',
       description: 'generator B',
     }
   }
