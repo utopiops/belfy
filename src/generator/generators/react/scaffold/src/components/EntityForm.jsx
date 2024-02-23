@@ -67,8 +67,9 @@ export function EditEntity({ name, properties }) {
 }
 
 function EntityForm({ name, properties, id, defaultValues = {}, submitSuccess = () => {} }) {
-  const title = id ? `Edit ${name}:${id}` : `Add new ${name}`
-  const mutationFn = id ? (values) => updateEntity(name, id, values) : (values) => addEntity(name, values)
+  const isEdit = !!id
+  const title = isEdit ? `Edit ${name}:${id}` : `Add new ${name}`
+  const mutationFn = isEdit ? (values) => updateEntity(name, id, values) : (values) => addEntity(name, values)
 
   const { register, handleSubmit } = useForm({
     defaultValues,
@@ -96,7 +97,7 @@ function EntityForm({ name, properties, id, defaultValues = {}, submitSuccess = 
             </div>
           )
         })}
-        <button type="submit">Update</button>
+        <button type="submit">{isEdit ? 'Update' : 'Create' }</button>
       </form>
     </>
   )

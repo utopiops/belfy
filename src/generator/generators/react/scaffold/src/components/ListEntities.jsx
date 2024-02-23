@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
-import { useQuery } from '@tanstack/react-query'
-import { getEntities } from '../api/base'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { deleteEntity, getEntities } from '../api/base'
 import { Link } from 'react-router-dom'
 import React from 'react'
 
@@ -15,11 +15,22 @@ ListEntities.propTypes = {
 }
 
 export default function ListEntities({ name, properties }) {
+
+  const queryClient = useQueryClient()
+
   const { data: entities, isLoading } = useQuery({
-    queryKey: [name.toLowerCase()],
+    queryKey: [name?.toLowerCase()],
     queryFn: async () => {
       const resp = await getEntities(name)
       return resp.data
+    },
+  })
+
+  const { mutate } = useMutation({
+    mutationFn: async ({id}) =>  await deleteEntity(name, id),
+    onError: (e) => alert(`Oops! `, e.message),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: [name?.toLowerCase()]})
     },
   })
 
@@ -33,7 +44,7 @@ export default function ListEntities({ name, properties }) {
       <h1>{name} list</h1>
       <section>
         <div>
-          <Link className="create-button" href="/${entity.name.toLowerCase()}/new">
+          <Link className="create-button" to={`/${name}/new`}>
             + Create
           </Link>
         </div>
@@ -54,7 +65,7 @@ export default function ListEntities({ name, properties }) {
                     })}
                     <div className="actions">
                       <Link to={`/${name}/edit/${e.id}`}>Edit</Link>
-                      <button className="btn-danger" onClick={() => {}}>
+                      <button className="btn-danger" onClick={() => mutate({id: e.id})}>
                         Delete
                       </button>
                     </div>
