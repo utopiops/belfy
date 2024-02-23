@@ -38,7 +38,6 @@ export default function ListEntities({ name, properties }) {
     return <p>Loading...</p>
   }
 
-  console.log(`entities: `, JSON.stringify(entities, null, 2))
   return (
     <>
       <h1>{name} list</h1>
@@ -65,6 +64,7 @@ export default function ListEntities({ name, properties }) {
                     })}
                     <div className="actions">
                       <Link to={`/${name}/edit/${e.id}`}>Edit</Link>
+                      {/* TODO: show confirmation modal */}
                       <button className="btn-danger" onClick={() => mutate({id: e.id})}>
                         Delete
                       </button>
@@ -76,28 +76,6 @@ export default function ListEntities({ name, properties }) {
           </div>
         </div>
       </section>
-      {/* <script>
-    function confirmDelete(id) {
-        if (confirm('Are you sure you want to delete this ${entity.name}?')) {
-            // Send delete request to the server
-            fetch('/${entity.name.toLowerCase()}/' + id, {
-                method: 'DELETE'
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Reload the page after successful deletion
-                    location.reload();
-                } else {
-                    throw new Error('Failed to delete ${entity.name}');
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                alert('Failed to delete ${entity.name}. Please try again later.');
-            });
-        }
-    }
-</script> */}
     </>
   )
 }
