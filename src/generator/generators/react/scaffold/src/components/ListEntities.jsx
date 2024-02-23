@@ -6,31 +6,31 @@ import React from 'react'
 
 ListEntities.propTypes = {
   name: PropTypes.string,
-  properties: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    type: PropTypes.string //not supported currently
-  }))
+  properties: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      type: PropTypes.string, //not supported currently
+    }),
+  ),
 }
-
-
 
 export default function ListEntities({ name, properties }) {
   const { data: entities, isLoading } = useQuery({
     queryKey: [name.toLowerCase()],
-    queryFn:async () => {
-      const resp = await getEntities(name);
-      return resp.data;
-    }
+    queryFn: async () => {
+      const resp = await getEntities(name)
+      return resp.data
+    },
   })
-  
+
   if (isLoading) {
     return <p>Loading...</p>
   }
-  
-  console.log(`entities: `, JSON.stringify(entities, null, 2));
+
+  console.log(`entities: `, JSON.stringify(entities, null, 2))
   return (
     <>
-      <h1>{ name } list</h1>
+      <h1>{name} list</h1>
       <section>
         <div>
           <Link className="create-button" href="/${entity.name.toLowerCase()}/new">
@@ -47,19 +47,19 @@ export default function ListEntities({ name, properties }) {
           <div className="table-body">
             {entities?.map((e, i) => {
               return (
-                <div key={i} className="table-row">
-                  {properties.map((p) => {
-                    return (
-                      <React.Fragment key={p.name}>
-                        <div>{e[p.name]}</div>
-                        <div className="actions">
-                          <Link href={`/${p.name}/edit/${e.id}`}>Edit</Link>
-                          <button className="btn-danger" onClick={() =>{}}>Delete</button>
-                        </div>
-                      </React.Fragment>
-                    )
-                  })}
-                </div>
+                <React.Fragment key={i}>
+                  <div key={i} className="table-row">
+                    {properties.map((p) => {
+                      return <div key={p.name}>{e[p.name]}</div>
+                    })}
+                    <div className="actions">
+                      <Link to={`/${name}/edit/${e.id}`}>Edit</Link>
+                      <button className="btn-danger" onClick={() => {}}>
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </React.Fragment>
               )
             })}
           </div>

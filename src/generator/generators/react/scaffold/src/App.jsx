@@ -5,8 +5,9 @@ import PropTypes from 'prop-types'
 import './App.css'
 import ListEntities from './components/ListEntities'
 import { entities } from './entities'
-import { AddEntity } from './components/AddEntity'
+import { AddEntity, EditEntity } from './components/EntityForm'
 import React from 'react'
+// import { EditEntity } from './components/EditEntity'
 
 function App() {
   const queryClient = new QueryClient()
@@ -38,6 +39,7 @@ function Router() {
           return <React.Fragment key={k}>
             <Route path={`/${k.toLocaleLowerCase()}`} element={<ListEntities name={k} properties={entities[k]} />} />
             <Route path={`/${k.toLocaleLowerCase()}/new`} element={<AddEntity name={k} properties={entities[k]} />} />
+            <Route path={`/${k.toLocaleLowerCase()}/edit/:id`} element={<EditEntity name={k} properties={entities[k]} />} />
           </React.Fragment>
         })}
       </Routes>
