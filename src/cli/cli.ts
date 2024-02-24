@@ -30,6 +30,8 @@ const main = async () => {
     const beGenerator = extensionManager.getGenerator(projectConfig.base.selectedBackEnd)
     beGenerator.generate(projectConfig, parsed)
     // pass baseAnswers and beAnswers to generator corresponding to selectedBack
+    const feGenerator = extensionManager.getGenerator(projectConfig.base.selectedFrontEnd)
+    feGenerator.generate(projectConfig, parsed)
   }
 }
 

@@ -15,9 +15,6 @@ export class FullStackExpressHandlebarsGenerator implements Generator {
 
       // generate the dynamic files for routes, controllers, etc.
       await generateTemplates(dest, userData)
-
-      // clean up the project
-      await Promise.all([])
     } catch (error) {}
   }
 

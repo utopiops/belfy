@@ -10,14 +10,11 @@ export class BackEndExpressRESTGenerator implements Generator {
     try {
       // copy the scaffold to the output directory
       const src = path.resolve(process.cwd(), 'src', 'generator', 'generators', 'node-express', 'scaffold')
-      const dest = path.join(projectConfig.base.outputPath, projectConfig.base.projectName)
+      const dest = path.join(projectConfig.base.outputPath, projectConfig.base.projectName, 'be')
       await copyFolder(src, dest)
 
       // generate the dynamic files for routes, controllers, etc.
       await generateTemplates(dest, userData)
-
-      // clean up the project
-      await Promise.all([])
     } catch (error) {}
   }
 
@@ -25,7 +22,7 @@ export class BackEndExpressRESTGenerator implements Generator {
     return {
       id: 'be-express-rest',
       stack: 'back',
-      description: 'Node.js Express REST API',
+      description: 'Node.js Express REST API. Creates the project in <destination>/be.',
     }
   }
 

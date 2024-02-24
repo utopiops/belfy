@@ -28,7 +28,7 @@ Layout.propTypes = {
 function Layout({ children }) {
   return (
     <div className="text-slate-700">
-      <Navbar entities={Object.keys(entities)} />
+      <Navbar entities={entities.map(e => e.name)} />
       <div>{children}</div>
     </div>
   )
@@ -37,14 +37,14 @@ function Layout({ children }) {
 function Router() {
   return (
     <Routes>
-      {Object.keys(entities).map((k) => {
+      {entities.map((e) => {
         return (
-          <React.Fragment key={k}>
-            <Route path={`/${k.toLocaleLowerCase()}`} element={<ListEntities name={k} properties={entities[k]} />} />
-            <Route path={`/${k.toLocaleLowerCase()}/new`} element={<AddEntity name={k} properties={entities[k]} />} />
+          <React.Fragment key={e.name}>
+            <Route path={`/${e.name.toLocaleLowerCase()}`} element={<ListEntities name={e.name} properties={e.properties} />} />
+            <Route path={`/${e.name.toLocaleLowerCase()}/new`} element={<AddEntity name={e.name} properties={e.properties} />} />
             <Route
-              path={`/${k.toLocaleLowerCase()}/edit/:id`}
-              element={<EditEntity name={k} properties={entities[k]} />}
+              path={`/${e.name.toLocaleLowerCase()}/edit/:id`}
+              element={<EditEntity name={e.name} properties={e.properties} />}
             />
           </React.Fragment>
         )
