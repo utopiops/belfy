@@ -6,15 +6,30 @@ const handlebars = require('express-handlebars');
 var bodyParser = require('body-parser');
 const { sequelize } = require('./models/config');
 const routes = require('./routes');
+const cors = require('cors');
 
+
+
+const app = express();
+
+const allowedOrigin = process.env.ALLOWED_ORIGIN || '*';
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigin === '*' || origin === allowedOrigin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true // Enable credentials
+};
+app.use(cors(corsOptions));
 
 const hbs = handlebars.create({
   defaultLayout: 'default',
   layoutsDir: path.join(__dirname, 'views', 'layouts'),
   partialsDir: path.join(__dirname, 'views', 'partials'),
 })
-
-const app = express();
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
